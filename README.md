@@ -1,12 +1,12 @@
-# Project Name
+# Amber-Elk: Into the Deep
 
-> Pithy project description
+> A 3D Game
 
 ## Team
 
-  - __Product Owner__: teamMember
-  - __Scrum Master__: teamMember
-  - __Development Team Members__: teamMember, teamMember
+  - __Product Owner__: Rishi Goomar
+  - __Scrum Master__: Sean Rose
+  - __Development Team Members__: Liam Schauerman, Tom G Varik
 
 ## Table of Contents
 
@@ -20,15 +20,15 @@
 
 ## Usage
 
-> Some usage instructions
+> Coming Soon!
 
 ## Requirements
 
 - Node 0.10.x
-- Redis 2.6.x
-- Postgresql 9.1.x
-- etc
-- etc
+- Gulp
+- Three.js
+- Express 4.9.4
+- Bower
 
 ## Development
 
@@ -40,11 +40,12 @@ From within the root directory:
 sudo npm install -g bower
 npm install
 bower install
+gulp
 ```
 
 ### Roadmap
 
-View the project roadmap [here](LINK_TO_PROJECT_ISSUES)
+View the project roadmap [here](https://waffle.io/amber-elk/amber-elk)
 
 
 ## Contributing
