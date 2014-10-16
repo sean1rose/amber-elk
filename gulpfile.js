@@ -71,5 +71,5 @@ gulp.task('docs', function() {
   return gulp.src(paths.scripts.concat(['README.md']))
     .pipe(jsdoc('./docs'));
 });
-
+// By default, run linter, test the code, and start the server
 gulp.task('default', ['lint', 'test', 'start']);
