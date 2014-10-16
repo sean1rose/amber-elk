@@ -1,28 +1,26 @@
-var moveCamera = function(axis, distance) {
-	camera.position[axis] += distance;
-}
+
+// var moveCamera = function(axis, distance) {
+// 	camera.position[axis] += distance;
+// }
 var movePlayer = function(axis, distance) {
 	player.position[axis] += distance;
+	camera.position[axis] += (distance * 1.4);
 }
 
 
 document.onkeydown = function(e) {
 	switch (e.keyCode) {
     case 37: // left
-      moveCamera('x', -7);
-      movePlayer('x', -5)
+      movePlayer('x', -10)
       break;
     case 38: // up
-      moveCamera('y', 7);
-      movePlayer('y', 5)
+      movePlayer('y', 10)
       break;
     case 39: // right
-      moveCamera('x', 7);
-      movePlayer('x', 5)
+      movePlayer('x', 10)
       break;
     case 40: // down
-      moveCamera('y', -7);
-      movePlayer('y', -5)
+      movePlayer('y', -10)
       break;
 	}
 	console.log(camera.position, player.position)
