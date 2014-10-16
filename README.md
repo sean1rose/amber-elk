@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/amber-elk/amber-elk.png?label=ready&title=Ready)](https://waffle.io/amber-elk/amber-elk)
 # Amber-Elk: Into the Deep
 
 > A 3D Game
