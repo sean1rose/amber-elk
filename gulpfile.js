@@ -2,14 +2,29 @@
 var gulp = require('gulp');
 var bs = require('browser-sync');
 var nodemon = require('gulp-nodemon');
-
+var jshint = require('gulp-jshint');
+var stylish = require('jshint-stylish');
+var mocha = require('gulp-mocha');
+var jsdoc = require('gulp-jsdoc');
+var uglify = require('gulp-uglify');
+var concat = require('gulp-concat');
+var cssmin = require('gulp-cssmin');
+var rename  = require("gulp-rename");
 // the paths to our app files
 var paths = {
   scripts: ['client/app/**/*.js'],
   html: ['client/pages/*.html', 'client/index.html'],
   styles: ['client/styles/**/*.css'],
-  test: ['tests/**/*.js']
+  tests: ['tests/**/*.js'],
+  serverScripts: ['server/**/*.js']
 };
+
+// JS HINT on both client js and server js
+gulp.task('lint', function() {
+  return gulp.src(paths.scripts.concat(paths.serverScripts))
+    .pipe(jshint())
+    .pipe(jshint.reporter(stylish));
+});
 
 // Start browser sync with the server
 gulp.task('start', ['serve'],function () {
@@ -26,8 +41,35 @@ gulp.task('serve', function() {
   nodemon({script: 'server/index.js', ignore: 'node_modules/**/*.js'});
 });
 
-// TODO add testing task
+// Mocha testing
+gulp.task('test', function() {
+  return gulp.src(paths.tests, {read: false})
+    .pipe(mocha({reporter: 'nyan'}));
+});
 
-// TODO add minifying tasks for JS and CSS
+// Minify Javascript
+gulp.task('minjs', function() {
+  gulp.src(paths.scripts)
+    .pipe(concat('main.js'))
+    .pipe(rename({suffix: '.min'}))
+    .pipe(uglify())
+    .pipe(gulp.dest('dist/js'))
+});
+// Minify CSS
+gulp.task('mincss', function() {
+  gulp.src(paths.styles)
+    .pipe(concat('main.css'))
+    .pipe(rename({suffix: '.min'}))
+    .pipe(cssmin())
+    .pipe(gulp.dest('dist/css'));
+});
+// Build for production
+gulp.task('build', ['minjs', 'mincss']);
 
-gulp.task('default', ['start']);
+// Generate docs using jsdoc
+gulp.task('docs', function() {
+  return gulp.src(paths.scripts.concat(['README.md']))
+    .pipe(jsdoc('./docs'));
+});
+// By default, run linter, test the code, and start the server
+gulp.task('default', ['lint', 'test', 'start']);

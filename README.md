@@ -27,9 +27,8 @@
 
 - Node 0.10.x
 - Gulp
-- Three.js
-- Express 4.9.4
 - Bower
+- NPM
 
 ## Development
 
@@ -41,8 +40,19 @@ From within the root directory:
 sudo npm install -g bower
 npm install
 bower install
+```
+
+### Starting Development Server
+```sh
+# Run JSHint, Mocha Tests, then start the server
 gulp
 ```
+
+### Generating Documentation
+```sh
+gulp docs
+```
+You should then see a ```docs/``` folder which contains an easy to use documentation navigation system.
 
 ### Roadmap
 
