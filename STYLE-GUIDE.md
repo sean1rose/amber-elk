@@ -195,6 +195,9 @@ When writing any block of code that is logically subordinate to the line immedia
 * Comment on what code is attempting to do, not how it will achieve it.
 * A good comment is often less effective than a good variable name.
 
+#### Follow JS DOC comment guidelines when defining functions
+This will make it easier for other developers to get an idea of what your code is doing and what is it used for.
+See the [JS Doc documentation](http://usejsdoc.org/) for more information.
 
 ### Padding & additional whitespace
 
