@@ -9,9 +9,11 @@
   "devDependencies": {
     "browser-sync": "^1.5.8",
     "gulp": "^3.8.8",
-    "gulp-mocha": "^1.1.1",
+    "gulp-jsdoc": "^0.1.4",
     "gulp-jshint": "^1.8.5",
+    "gulp-mocha": "^1.1.1",
     "gulp-nodemon": "^1.0.4",
+    "jsdoc": "^3.3.0-alpha9",
     "jshint-stylish": "^1.0.0"
   }
 }

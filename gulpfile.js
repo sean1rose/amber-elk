@@ -5,6 +5,7 @@ var nodemon = require('gulp-nodemon');
 var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
 var mocha = require('gulp-mocha');
+var jsdoc = require('gulp-jsdoc');
 // the paths to our app files
 var paths = {
   scripts: ['client/app/**/*.js'],
@@ -41,8 +42,13 @@ gulp.task('test', function() {
   return gulp.src(paths.tests, {read: false})
     .pipe(mocha({reporter: 'nyan'}));
 });
+
 // TODO add minifying tasks for JS and CSS
 
-// TODO generate JSDOC
+// Generate docs using jsdoc
+gulp.task('docs', function() {
+  return gulp.src(paths.scripts, 'README.md')
+    .pipe(jsdoc('./docs'));
+});
 
 gulp.task('default', ['lint', 'test', 'start']);
