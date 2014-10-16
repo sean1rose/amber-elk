@@ -6,6 +6,10 @@ var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
 var mocha = require('gulp-mocha');
 var jsdoc = require('gulp-jsdoc');
+var uglify = require('gulp-uglify');
+var concat = require('gulp-concat');
+var cssmin = require('gulp-cssmin');
+var rename  = require("gulp-rename");
 // the paths to our app files
 var paths = {
   scripts: ['client/app/**/*.js'],
@@ -43,10 +47,24 @@ gulp.task('test', function() {
     .pipe(mocha({reporter: 'nyan'}));
 });
 
-// TODO add minifying tasks for JS and CSS
-gulp.task('build', function() {
-
+// Minify Javascript
+gulp.task('minjs', function() {
+  gulp.src(paths.scripts)
+    .pipe(concat('main.js'))
+    .pipe(rename({suffix: '.min'}))
+    .pipe(uglify())
+    .pipe(gulp.dest('dist/js'))
 });
+// Minify CSS
+gulp.task('mincss', function() {
+  gulp.src(paths.styles)
+    .pipe(concat('main.css'))
+    .pipe(rename({suffix: '.min'}))
+    .pipe(cssmin())
+    .pipe(gulp.dest('dist/css'));
+});
+// Build for production
+gulp.task('build', ['minjs', 'mincss']);
 
 // Generate docs using jsdoc
 gulp.task('docs', function() {
