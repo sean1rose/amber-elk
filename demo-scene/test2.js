@@ -16,9 +16,9 @@ camera.lookAt(scene.position);
 
 var geometry = new THREE.RingGeometry(10, 15, 32);
 var material = new THREE.MeshLambertMaterial({color: 0xff0000, transparent: true, opacity: 0.5});
-var mesh = new THREE.Mesh(geometry, material);
-scene.add(mesh);
-mesh.position.set(0,0,100);
+var player = new THREE.Mesh(geometry, material);
+scene.add(player);
+player.position.set(0,0,100);
 
 var particleCount = 300;
 var particles = new THREE.Geometry();
