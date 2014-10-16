@@ -44,10 +44,13 @@ gulp.task('test', function() {
 });
 
 // TODO add minifying tasks for JS and CSS
+gulp.task('build', function() {
+
+});
 
 // Generate docs using jsdoc
 gulp.task('docs', function() {
-  return gulp.src(paths.scripts, 'README.md')
+  return gulp.src(paths.scripts.concat(['README.md']))
     .pipe(jsdoc('./docs'));
 });
 

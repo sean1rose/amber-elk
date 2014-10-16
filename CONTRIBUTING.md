@@ -53,7 +53,7 @@ These commands will help you do this:
 git checkout -b `your-branch-name`
 ```
 
-### Make commits to your feature branch. 
+### Make commits to your feature branch.
 
 Prefix each commit like so
   - (feat) Added a new feature
@@ -141,13 +141,12 @@ Thanks for contributing!
 ### Guidelines
 
 1. Uphold the current code standard:
-    - Keep your code [DRY][].
-    - Apply the [boy scout rule][].
+    - Keep your code DRY.
     - Follow [STYLE-GUIDE.md](STYLE-GUIDE.md)
-1. Run the [tests][] before submitting a pull request.
+1. Run the tests before submitting a pull request.
 1. Tests are very, very important. Submit tests if your pull request contains
    new, testable behavior.
-1. Your pull request is comprised of a single ([squashed][]) commit.
+1. Your pull request is comprised of a single (squashed) commit.
 
 ## Checklist:
 
@@ -165,17 +164,3 @@ This is just to help you organize your process
 
 If you follow all of these guidelines and make good changes, you should have
 no problem getting your changes merged in.
-
-
-<!-- Links -->
-[style guide]: https://github.com/hackreactor-labs/style-guide
-[n-queens]: https://github.com/hackreactor-labs/n-queens
-[Underbar]: https://github.com/hackreactor-labs/underbar
-[curriculum workflow diagram]: http://i.imgur.com/p0e4tQK.png
-[cons of merge]: https://f.cloud.github.com/assets/1577682/1458274/1391ac28-435e-11e3-88b6-69c85029c978.png
-[Bookstrap]: https://github.com/hackreactor/bookstrap
-[Taser]: https://github.com/hackreactor/bookstrap
-[tools workflow diagram]: http://i.imgur.com/kzlrDj7.png
-[Git Flow]: http://nvie.com/posts/a-successful-git-branching-model/
-[GitHub Flow]: http://scottchacon.com/2011/08/31/github-flow.html
-[Squash]: http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html
