@@ -23,6 +23,15 @@ mesh.position.set(0,0,100);
 var particleCount = 300;
 var particles = new THREE.Geometry();
 
+var makeCubeAtOrigin = function(){
+  var cubeGeometry = new THREE.BoxGeometry(3,5,1);
+  var cubeMaterial = new THREE.MeshBasicMaterial( { color: 'blue' } );
+  var cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
+  scene.add( cube );
+  cube.position.set(0,0,0)
+}();
+// makeCubeAtOrigin();
+
 var makeParticle = function(particle){
   var px = (Math.random() * window.innerWidth) - (window.innerWidth / 2);
   var py = (Math.random() * window.innerHeight) - (window.innerHeight / 2);
