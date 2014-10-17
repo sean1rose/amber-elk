@@ -1,5 +1,5 @@
 [![Stories in Ready](https://badge.waffle.io/amber-elk/amber-elk.png?label=ready&title=Ready)](https://waffle.io/amber-elk/amber-elk)
-[![Build Status](https://travis-ci.org/rgoomar/amber-elk.svg?branch=master)](https://travis-ci.org/rgoomar/amber-elk)
+[![Build Status](https://travis-ci.org/Amber-Elk/amber-elk.svg?branch=master)](https://travis-ci.org/Amber-Elk/amber-elk)
 # Amber-Elk: Into the Deep
 
 > A 3D Game
