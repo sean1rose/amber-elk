@@ -5,5 +5,6 @@ var app = express();
 // Serve static files
 app.use('/', express.static(path.join(__dirname + '/../client')));
 app.use('/styles', express.static(path.join(__dirname + '/../client/styles')));
+app.use('/images', express.static(path.join(__dirname + '/../client/public/images')));
 // Listen on port 1337
 app.listen(1337);
