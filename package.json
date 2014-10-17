@@ -23,5 +23,5 @@
   "scripts": {
     "start": "gulp start",
     "test": "gulp test"
-  },
+  }
 }
