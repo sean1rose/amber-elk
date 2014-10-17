@@ -5,7 +5,7 @@ html{
 body {
   font-size: 15px;
   height: 100%;
-  background: url('localhost:1337/../public/images/underwater.jpg') no-repeat center center fixed;
+  background: url('/images/underwater.jpg') no-repeat center center fixed;
   margin: 0px;
   padding: 0px;
   text-rendering: optimizeLegibility;
