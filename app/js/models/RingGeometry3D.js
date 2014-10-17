@@ -104,7 +104,7 @@ THREE.RingGeometry3D = function (params) {
 
 
   var wallFaces = function () {
-
+    var phiIndex = 0;
     var inner = getWalls().inner;
     var thetaIndex;
     for (var i = 0; i < inner.length - (params.thetaSegments + (closed ? 0 : 1)); i++){
@@ -113,46 +113,60 @@ THREE.RingGeometry3D = function (params) {
         v2 = inner[i + params.thetaSegments + (closed ? 0 : 1)];
         v3 = inner[closed ? (i + 1) % params.thetaSegments : i + 1];
         v4 = inner[closed ? (i + 1) % params.thetaSegments + params.thetaSegments : i + 2 + params.thetaSegments];
-      }
-    }
+        na = this.vertices[v1].clone();
+        nb = this.vertices[v2].clone();
+        if (phiIndex === 0) {
+          this.faces.push(new THREE.Face3(v2, v1, v3));
+          this.faceVertexUvs[0].push([uvs[v2].clone(), uvs[v1].clone(), uvs[v3].clone()]);
+          this.faces.push(new THREE.Face3(v3, v4, v2));
+          this.faceVertexUvs[0].push([uvs[v3].clone(), uvs[v4].clone(), uvs[v2].clone()]);
+        } else {
+          this.faces.push(new THREE.Face3(v2, v4, v3, [nVector(0,0,1), nVector(0,0,1), nVector(0,0,1)]));
+          this.faceVertexUvs[0].push([uvs[v2].clone(), uvs[v4].clone(), uvs[v3].clone()]);
+          this.faces.push(new THREE.Face3(v3, v1, v2, [nVector(0,0,1), nVector(0,0,1), nVector(0,0,1)]));
+          this.faceVertexUvs[0].push([uvs[v3].clone(), uvs[v1].clone(), uvs[v2].clone()]);
 
-
-    var na, nb, thetaIndex, phiIndex, heightIndex, phiBase, phiComponent, offset, nextOffset;
-    var v1, v2, v3, v4, n1, n2, n3, n4;
-    for (thetaIndex = 0; thetaIndex < params.thetaSegments + (closed ? 0 : 1); thetaIndex++) {
-      na = this.vertices[thetaIndex].clone();
-      nb = this.vertices[closed ? (thetaIndex + 1) % params.thetaSegments : thetaIndex + 1];
-      for (phiIndex = 0; phiIndex <= params.phiSegments; phiIndex += params.phiSegments) {
-        if (phiIndex === 0 || phiIndex === params.phiSegments) {
-          phiBase = (params.thetaSegments + (closed ? 0 : 1)) * (params.phiSegments + 1);
-          phiComponent = phiIndex * (params.thetaSegments + (closed ? 0 : 1));
-          for (heightIndex = 0; heightIndex < params.heightSegments; heightIndex++) {
-            offset = (heightIndex > 0 ? phiBase : 0) + phiComponent + (heightIndex * (phiIndex - 1)) + (heightIndex * (params.thetaSegments + (closed ? 0 : 1)));
-            nextOffset = (heightIndex + 1 > 0 ? phiBase : 0) + phiComponent + ((heightIndex + 1) * (phiIndex - 1)) + ((heightIndex + 1) * (params.thetaSegments + (closed ? 0 : 1)));
-            v1 = offset + thetaIndex;
-            v2 = offset + (closed ? (thetaIndex + 1) % params.thetaSegments : thetaIndex + 1);
-            v3 = nextOffset + thetaIndex;
-            v4 = nextOffset + (closed ? (thetaIndex + 1) % params.thetaSegments : thetaIndex + 1);
-            n1 = na.clone();
-            n2 = nb.clone();
-            n3 = na.clone();
-            n4 = nb.clone();
-            if (phiIndex === 0) {
-              this.faces.push(new THREE.Face3(v1, v2, v3, [n1, n2, n3]));
-              this.faceVertexUvs[0].push([uvs[v1].clone(), uvs[v2].clone(), uvs[v3].clone()]);
-              this.faces.push(new THREE.Face3(v2, v3, v4, [n2, n3, n4]));
-              this.faceVertexUvs[0].push([uvs[v2].clone(), uvs[v3].clone(), uvs[v4].clone()]);
-            } else {
-              this.faces.push(new THREE.Face3(v3, v2, v1, [n3, n2, n1]));
-              this.faceVertexUvs[0].push([uvs[v3].clone(), uvs[v2].clone(), uvs[v1].clone()]);
-              this.faces.push(new THREE.Face3(v4, v3, v2, [n4, n3, n2]));
-              this.faceVertexUvs[0].push([uvs[v4].clone(), uvs[v3].clone(), uvs[v2].clone()]);
-
-            }
-          }
         }
       }
     }
+
+
+    //var na, nb, thetaIndex, phiIndex, heightIndex, phiBase, phiComponent, offset, nextOffset;
+    //var v1, v2, v3, v4, n1, n2, n3, n4;
+    //for (thetaIndex = 0; thetaIndex < params.thetaSegments + (closed ? 0 : 1); thetaIndex++) {
+    //  na = this.vertices[thetaIndex].clone();
+    //  nb = this.vertices[closed ? (thetaIndex + 1) % params.thetaSegments : thetaIndex + 1];
+    //  for (phiIndex = 0; phiIndex <= params.phiSegments; phiIndex += params.phiSegments) {
+    //    if (phiIndex === 0 || phiIndex === params.phiSegments) {
+    //      phiBase = (params.thetaSegments + (closed ? 0 : 1)) * (params.phiSegments + 1);
+    //      phiComponent = phiIndex * (params.thetaSegments + (closed ? 0 : 1));
+    //      for (heightIndex = 0; heightIndex < params.heightSegments; heightIndex++) {
+    //        offset = (heightIndex > 0 ? phiBase : 0) + phiComponent + (heightIndex * (phiIndex - 1)) + (heightIndex * (params.thetaSegments + (closed ? 0 : 1)));
+    //        nextOffset = (heightIndex + 1 > 0 ? phiBase : 0) + phiComponent + ((heightIndex + 1) * (phiIndex - 1)) + ((heightIndex + 1) * (params.thetaSegments + (closed ? 0 : 1)));
+    //        v1 = offset + thetaIndex;
+    //        v2 = offset + (closed ? (thetaIndex + 1) % params.thetaSegments : thetaIndex + 1);
+    //        v3 = nextOffset + thetaIndex;
+    //        v4 = nextOffset + (closed ? (thetaIndex + 1) % params.thetaSegments : thetaIndex + 1);
+    //        n1 = na.clone();
+    //        n2 = nb.clone();
+    //        n3 = na.clone();
+    //        n4 = nb.clone();
+    //        if (phiIndex === 0) {
+    //          this.faces.push(new THREE.Face3(v1, v2, v3, [n1, n2, n3]));
+    //          this.faceVertexUvs[0].push([uvs[v1].clone(), uvs[v2].clone(), uvs[v3].clone()]);
+    //          this.faces.push(new THREE.Face3(v2, v3, v4, [n2, n3, n4]));
+    //          this.faceVertexUvs[0].push([uvs[v2].clone(), uvs[v3].clone(), uvs[v4].clone()]);
+    //        } else {
+    //          this.faces.push(new THREE.Face3(v3, v2, v1, [n3, n2, n1]));
+    //          this.faceVertexUvs[0].push([uvs[v3].clone(), uvs[v2].clone(), uvs[v1].clone()]);
+    //          this.faces.push(new THREE.Face3(v4, v3, v2, [n4, n3, n2]));
+    //          this.faceVertexUvs[0].push([uvs[v4].clone(), uvs[v3].clone(), uvs[v2].clone()]);
+    //
+    //        }
+    //      }
+    //    }
+    //  }
+
   }.bind(this);
 
   THREE.Geometry.call(this);
