@@ -16,6 +16,10 @@ body {
           UI Overrides
 *******************************/
 
+.heart {
+  color: white;
+}
+
 .ui.header {
   font-family: "Andale Mono", AndaleMono, monospace;
 }
@@ -32,7 +36,12 @@ h1.ui.header {
 }
 
 h2.ui.header {
+  font-size: 4em;
+}
+
+h3.ui.header {
   font-size: 3em;
+  color: white;
 }
 
 h4.ui.header,
@@ -68,6 +77,42 @@ p a {
 /*******************************
             Global
 *******************************/
+
+.commentbox {
+  display: block;
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.playerquote {
+  color: #AEE9EF;
+  font-size: 14pt;
+  text-align: left;
+  margin-top: 50px;
+  margin-bottom: 10px;
+}
+
+.playerquotesource {
+  color: white;
+  font-size: 12pt;
+  text-align: right;
+  margin-top: 10px;
+  margin-bottom: 50px;
+}
+
+p {
+  font-family: "Andale Mono", AndaleMono, monospace;
+  line-height: 150%;
+  text-transform: uppercase;
+  display: block;
+  -webkit-margin-before: 1em;
+  -webkit-margin-after: 1em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+}
 
 .menu .right.menu > .mobile.item {
   display: none;
