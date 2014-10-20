@@ -28,15 +28,17 @@ body {
 h1,
 h2 {
   font-weight: normal !important;
+  color: #AEE9EF;
 }
 
 h1.ui.header {
   font-size: 5em;
-  color: black;
+  color: #AEE9EF;
 }
 
 h2.ui.header {
   font-size: 4em;
+  color: white;
 }
 
 h3.ui.header {
@@ -51,6 +53,10 @@ h5.ui.header,
 }
 
 #amber-elk-header {
+  color: white;
+}
+
+#deep-header {
   color: white;
 }
 

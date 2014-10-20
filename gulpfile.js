@@ -34,7 +34,7 @@ gulp.task('lint', function() {
 gulp.task('start', ['serve'],function () {
   bs({
     notify: true,
-    injectChanges: true,
+    injectChanges: false,
     files: paths.scripts.concat(paths.disthtml, paths.diststyles),
     proxy: 'localhost:1337'
   });
@@ -101,8 +101,12 @@ gulp.task('copystatic', function() {
 });
 // Remove the dist folder to properly regenerate it
 gulp.task('cleanup', function() {
-  gulp.src(['dist'])
+  return gulp.src(['dist/**/*.*'], {read: false})
     .pipe(rimraf());
+});
+
+gulp.task('reloadpage', function(){
+  bs.reload();
 });
 // Build for production
 gulp.task('build', ['cleanup', 'copystatic', 'bowerbuildjs', 'bowerbuildcss', 'minjs', 'mincss']);
@@ -116,4 +120,8 @@ gulp.task('docs', function() {
     .pipe(jsdoc('./docs'));
 });
 // By default, run linter, test the code, and start the server
-gulp.task('default', ['lint', 'build', 'test', 'start']);
+gulp.task('default', ['lint', 'build', 'test', 'start'], function(){
+  gulp.watch(paths.html, ['copystatic', 'reloadpage']);
+  gulp.watch(paths.scripts, ['minjs', 'reloadpage']);
+  gulp.watch(paths.styles, ['mincss', 'reloadpage']);
+});
