@@ -34,7 +34,7 @@ gulp.task('lint', function() {
 gulp.task('start', ['serve'],function () {
   bs({
     notify: true,
-    injectChanges: false,
+    injectChanges: true,
     files: paths.scripts.concat(paths.disthtml, paths.diststyles),
     proxy: 'localhost:1337'
   });
