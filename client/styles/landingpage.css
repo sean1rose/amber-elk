@@ -28,15 +28,17 @@ body {
 h1,
 h2 {
   font-weight: normal !important;
+  color: #AEE9EF;
 }
 
 h1.ui.header {
   font-size: 5em;
-  color: black;
+  color: #AEE9EF;
 }
 
 h2.ui.header {
   font-size: 4em;
+  color: white;
 }
 
 h3.ui.header {
@@ -50,7 +52,17 @@ h5.ui.header,
   font-weight: bold !important;
 }
 
+.ui.button.playbutton {
+  line-height: 100%;
+  font-size: 1.3em;
+  padding: 25px 85px;
+}
+
 #amber-elk-header {
+  color: white;
+}
+
+#deep-header {
   color: white;
 }
 
