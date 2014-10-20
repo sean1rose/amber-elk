@@ -107,7 +107,7 @@ describe('amber-elk', function(){
     it('should have a function that sets up initial three.js scene', function(){
 
     });
-    it('should have a function that ')
+   // it('should have a function that ')
   })
 
 })
