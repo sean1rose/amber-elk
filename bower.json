@@ -4,6 +4,8 @@
   "dependencies": {
     "semantic": "~0.19.3",
     "three.js": "*",
-    "github-fork-ribbon-css": "~0.1.1"
+    "github-fork-ribbon-css": "~0.1.1",
+    "firebase": "~1.1.2",
+    "jquery": "~2.1.1"
   }
 }
