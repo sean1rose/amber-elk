@@ -1,8 +1,8 @@
-var chai = require('chai');
-var assert = chai.assert;
-var should = chai.should();
-var expect = chai.expect;
-
+// var chai = require('chai');
+// var assert = chai.assert;
+// var should = chai.should();
+// var expect = chai.expect;
+//
 describe('amber-elk', function(){
 
   describe('playername', function(){
@@ -67,7 +67,7 @@ describe('amber-elk', function(){
     });
   });
 
-  describe('foreign particle model - creation and removal', function(){  
+  describe('foreign particle model - creation and removal', function(){
     it('should have a function that generates a random spawn location for foreign particles', function(){
 
     });
@@ -111,19 +111,3 @@ describe('amber-elk', function(){
   })
 
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
