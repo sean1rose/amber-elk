@@ -4,239 +4,169 @@
 
 /**
  * Creates a new 3D ring geometry.
- * @param {Object} params An object containing the parameters
- * @param {number} [params.outerRadius=50] Outer radius; r_outer > 0
- * @param {number} [params.innerRadius=25] Inner radius r_outer > r_inner > 0;
- * @param {number} [params.height=10] Ring Height; h > 0
- * @param {number} [params.thetaSegments=8] Theta segments; n_θ > 2; must be an integer
- * @param {number} [params.phiSegments=8] Phi segments; n_φ > 0; must be an integer
- * @param {number} [params.heightSegments=3] Height segments; n_h > 0; must be an integer
- * @param {number} [params.thetaStart=0] Angle of start of first theta segment; 0 ≤ θ < 2π
- * @param {number} [params.thetaLength=2.Math.PI] Arc length of the ring; 0 ≤ l_θ < 2π
+ * @param {number} [outerRadius=100] Outer radius; r_outer > 0
+ * @param {number} [innerRadius=75] Inner radius r_outer > r_inner > 0;
+ * @param {number} [height=10] Ring Height; h > 0
+ * @param {number} [thetaSegments=8] Theta segments; n_θ > 2; must be an integer
+ * @param {number} [phiSegments=3] Phi segments; n_φ > 0; must be an integer
+ * @param {number} [heightSegments=3] Height segments; n_h > 0; must be an integer
+ * @param {number} [thetaStart=0] Angle of start of first theta segment; 0 ≤ θ < 2π
+ * @param {number} [thetaLength=2*Math.PI] Arc length of the ring; 0 < l_θ < 2π
  * @constructor
  * @augments THREE.Geometry
  * @classdesc Geometry object for a 3D ring.
  */
-THREE.RingGeometry3D = function (params) {
+THREE.RingGeometry3D = function (outerRadius, innerRadius, height, thetaSegments, phiSegments, heightSegments, thetaStart, thetaLength) {
+
+  THREE.Geometry.call(this);
+
+  this.parameters = {
+    outerRadius: outerRadius || 100,
+    innerRadius: innerRadius ? Math.min(innerRadius, outerRadius - 0.001) : 75,
+    height: height ? Math.max(height, 0.001) : 10,
+    thetaSegments: thetaSegments ? Math.max(thetaSegments, 3) : 8,
+    phiSegments: phiSegments ? Math.max(phiSegments, 1) : 3,
+    heightSegments: heightSegments ? Math.max(heightSegments, 1) : 3,
+    thetaStart: thetaStart === undefined ? 0 : thetaStart % (2 * Math.PI),
+    thetaLength: thetaLength ? thetaLength % (2*Math.PI) : 0
+  };
+  this.parameters.thetaLength = this.parameters.thetaLength || 2*Math.PI;
+
+  // p is shorter than this.parameters...
+  var p = this.parameters;
 
   /**
-   * Creates a new vector from provided parameters
+   * Creates a new vector from provided parameters.
+   * Just a short wrapper for {THREE.Vector3}
    * @param x
    * @param y
    * @param z
    * @returns {THREE.Vector3}
    */
-  var nVector = function (x, y, z) {
+  var Vec = function (x, y, z) {
     return new THREE.Vector3(x, y, z);
   };
 
-  /**
-   * Adds faces for ends of ring
-   * @param zNormal
-   */
-  var endFaces = function () {
-    var thetaIndex, phiIndex, heightIndex;
-    var v1, v2, v3, v4;
-    var endSize = (params.thetaSegments + (closed ? 0 : 1)) * (params.phiSegments + 1);
-    var midSize = (params.thetaSegments + (closed ? 0 : 1)) * 2 + (closed ? 0 : (2 * (params.phiSegments - 1)));
-    var offset = endSize + midSize * (params.heightSegments - 1);
-
-    for (heightIndex = 0; heightIndex <= params.heightSegments; heightIndex += params.heightSegments) {
-      for (phiIndex = 0; phiIndex < params.phiSegments; phiIndex++) {
-        for (thetaIndex = 0; thetaIndex < params.thetaSegments; thetaIndex++) {
-          v1 = (heightIndex === 0 ? 0 : offset) + thetaIndex + phiIndex * (params.thetaSegments + (closed ? 0 : 1));
-          v2 = v1 + (params.thetaSegments + (closed ? 0 : 1));
-          v3 = (heightIndex === 0 ? 0 : offset) + (closed ? (thetaIndex + 1) % params.thetaSegments : thetaIndex + 1) + phiIndex * (params.thetaSegments + (closed ? 0 : 1));
-          v4 = v3 + (params.thetaSegments + (closed ? 0 : 1));
-          if (heightIndex === 0) {
-            this.faces.push(new THREE.Face3(v1, v3, v4, [nVector(0, 0, 1), nVector(0, 0, 1), nVector(0, 0, 1)]));
-            this.faceVertexUvs[0].push([uvs[v1].clone(), uvs[v3].clone(), uvs[v4].clone()]);
-            this.faces.push(new THREE.Face3(v4, v2, v1, [nVector(0,0,1),nVector(0,0,1),nVector(0,0,1)]));
-            this.faceVertexUvs[0].push([uvs[v4].clone(), uvs[v2].clone(), uvs[v1].clone()]);
-          } else {
-            this.faces.push(new THREE.Face3(v1, v2, v4, [nVector(0, 0, 1), nVector(0, 0, 1), nVector(0, 0, 1)]));
-            this.faceVertexUvs[0].push([uvs[v1].clone(), uvs[v2].clone(), uvs[v4].clone()]);
-            this.faces.push(new THREE.Face3(v4, v3, v1, [nVector(0,0,1),nVector(0,0,1),nVector(0,0,1)]));
-            this.faceVertexUvs[0].push([uvs[v4].clone(), uvs[v3].clone(), uvs[v1].clone()]);
-          }
-        }
-      }
-    }
-  }.bind(this);
-
-  var getWalls = function(){
-    var ret = {};
-    var i = -1;
-    for (var heightIndex = 0; heightIndex <= params.heightSegments; heightIndex++){
-      for (var phiIndex = 0; phiIndex <= params.phiSegments; phiIndex++){
-        for (var thetaIndex = 0; thetaIndex < params.thetaSegments + (closed ? 0 : 1); thetaIndex++) {
-          if (heightIndex === 0 || heightIndex === params.heightSegments
-            || phiIndex === 0 || phiIndex === params.phiSegments
-            || ((!closed) && heightIndex !== 0
-            && heightIndex !== params.heightSegments && ( thetaIndex === 0 || thetaIndex === params.thetaSegments))) {
-            i++;
-          }
-          if (heightIndex === 0) {
-            ret.bottom ? ret.bottom.push(i) : ret.bottom = [i];
-          }
-          if (heightIndex === params.heightSegments){
-            ret.top ? ret.top.push(i) : ret.top = [i];
-          }
-          if (phiIndex === 0) {
-            ret.inner ? ret.inner.push(i) : ret.inner = [i];
-          }
-          if (phiIndex === params.phiSegments){
-            ret.outer ? ret.outer.push(i) : ret.outer = [i];
-          }
-          if (!closed){
-            if (thetaIndex === 0){
-              ret.start ? ret.start.push(i) : ret.start = [i];
-            }
-            if (thetaIndex === params.thetaSegments){
-              ret.end ? ret.end.push(i) : ret.end = [i]
-            }
-          }
-        }
-      }
-    }
-    return ret;
-  };
 
 
-  var wallFaces = function () {
-    var phiIndex = 0;
-    var inner = getWalls().inner;
-    var thetaIndex;
-    for (var i = 0; i < inner.length - (params.thetaSegments + (closed ? 0 : 1)); i++){
-      for (var thetaIndex = 0; thetaIndex < params.thetaSegments + (closed ? 0 : 1); thetaIndex++) {
-        v1 = inner[i];
-        v2 = inner[i + params.thetaSegments + (closed ? 0 : 1)];
-        v3 = inner[closed ? (i + 1) % params.thetaSegments : i + 1];
-        v4 = inner[closed ? (i + 1) % params.thetaSegments + params.thetaSegments : i + 2 + params.thetaSegments];
-        na = this.vertices[v1].clone();
-        nb = this.vertices[v2].clone();
-        if (phiIndex === 0) {
-          this.faces.push(new THREE.Face3(v2, v1, v3));
-          this.faceVertexUvs[0].push([uvs[v2].clone(), uvs[v1].clone(), uvs[v3].clone()]);
-          this.faces.push(new THREE.Face3(v3, v4, v2));
-          this.faceVertexUvs[0].push([uvs[v3].clone(), uvs[v4].clone(), uvs[v2].clone()]);
-        } else {
-          this.faces.push(new THREE.Face3(v2, v4, v3, [nVector(0,0,1), nVector(0,0,1), nVector(0,0,1)]));
-          this.faceVertexUvs[0].push([uvs[v2].clone(), uvs[v4].clone(), uvs[v3].clone()]);
-          this.faces.push(new THREE.Face3(v3, v1, v2, [nVector(0,0,1), nVector(0,0,1), nVector(0,0,1)]));
-          this.faceVertexUvs[0].push([uvs[v3].clone(), uvs[v1].clone(), uvs[v2].clone()]);
-
-        }
-      }
-    }
-
-
-    //var na, nb, thetaIndex, phiIndex, heightIndex, phiBase, phiComponent, offset, nextOffset;
-    //var v1, v2, v3, v4, n1, n2, n3, n4;
-    //for (thetaIndex = 0; thetaIndex < params.thetaSegments + (closed ? 0 : 1); thetaIndex++) {
-    //  na = this.vertices[thetaIndex].clone();
-    //  nb = this.vertices[closed ? (thetaIndex + 1) % params.thetaSegments : thetaIndex + 1];
-    //  for (phiIndex = 0; phiIndex <= params.phiSegments; phiIndex += params.phiSegments) {
-    //    if (phiIndex === 0 || phiIndex === params.phiSegments) {
-    //      phiBase = (params.thetaSegments + (closed ? 0 : 1)) * (params.phiSegments + 1);
-    //      phiComponent = phiIndex * (params.thetaSegments + (closed ? 0 : 1));
-    //      for (heightIndex = 0; heightIndex < params.heightSegments; heightIndex++) {
-    //        offset = (heightIndex > 0 ? phiBase : 0) + phiComponent + (heightIndex * (phiIndex - 1)) + (heightIndex * (params.thetaSegments + (closed ? 0 : 1)));
-    //        nextOffset = (heightIndex + 1 > 0 ? phiBase : 0) + phiComponent + ((heightIndex + 1) * (phiIndex - 1)) + ((heightIndex + 1) * (params.thetaSegments + (closed ? 0 : 1)));
-    //        v1 = offset + thetaIndex;
-    //        v2 = offset + (closed ? (thetaIndex + 1) % params.thetaSegments : thetaIndex + 1);
-    //        v3 = nextOffset + thetaIndex;
-    //        v4 = nextOffset + (closed ? (thetaIndex + 1) % params.thetaSegments : thetaIndex + 1);
-    //        n1 = na.clone();
-    //        n2 = nb.clone();
-    //        n3 = na.clone();
-    //        n4 = nb.clone();
-    //        if (phiIndex === 0) {
-    //          this.faces.push(new THREE.Face3(v1, v2, v3, [n1, n2, n3]));
-    //          this.faceVertexUvs[0].push([uvs[v1].clone(), uvs[v2].clone(), uvs[v3].clone()]);
-    //          this.faces.push(new THREE.Face3(v2, v3, v4, [n2, n3, n4]));
-    //          this.faceVertexUvs[0].push([uvs[v2].clone(), uvs[v3].clone(), uvs[v4].clone()]);
-    //        } else {
-    //          this.faces.push(new THREE.Face3(v3, v2, v1, [n3, n2, n1]));
-    //          this.faceVertexUvs[0].push([uvs[v3].clone(), uvs[v2].clone(), uvs[v1].clone()]);
-    //          this.faces.push(new THREE.Face3(v4, v3, v2, [n4, n3, n2]));
-    //          this.faceVertexUvs[0].push([uvs[v4].clone(), uvs[v3].clone(), uvs[v2].clone()]);
-    //
-    //        }
-    //      }
-    //    }
-    //  }
-
-  }.bind(this);
-
-  THREE.Geometry.call(this);
-  _.defaults(params, {
-    innerRadius: 25,
-    outerRadius: 50,
-    height: 10,
-    thetaSegments: 8,
-    phiSegments: 8,
-    heightSegments: 3,
-    thetaStart: 0,
-    thetaLength: Math.PI * 2
-  });
-  params.innerRadius = Math.max(0.001, params.innerRadius);
-  params.innerRadius = Math.min(params.outerRadius - 0.001, params.innerRadius);
-  params.thetaSegments = Math.max(3, params.thetaSegments);
-  params.phiSegments = Math.max(1, params.phiSegments);
-  params.heightSegments = Math.max(1, params.heightSegments);
-  params.thetaStart %= 2 * Math.PI;
-  params.thetaLength = Math.min(Math.PI * 2, params.thetaLength);
-  this.parameters = _.clone(params);
-
-  var closed = params.thetaLength === Math.PI * 2;
-
-  var uvs = [];
+  var closed = this.isClosed();
+  var open = !closed;
+  var f = {};
+  var heightIndex, phiIndex, thetaIndex;
+  var v1, v2, v3, v4, n1, n2, n3, n4;
 
   // make vertices
-  var heightIndex, phiIndex, thetaIndex;
-  var heightStart = -(params.height / 2);
-  var heightStep = params.height / params.heightSegments;
-  var phiStep = (params.outerRadius - params.innerRadius) / params.phiSegments;
-  var thetaStep = params.thetaLength / params.thetaSegments;
-  for (heightIndex = 0; heightIndex <= params.heightSegments; heightIndex++) {
-    for (phiIndex = 0; phiIndex <= params.phiSegments; phiIndex++) {
-      for (thetaIndex = 0; thetaIndex < params.thetaSegments + (closed ? 0 : 1); thetaIndex++) {
-        if (heightIndex === 0 || heightIndex === params.heightSegments
-          || phiIndex === 0 || phiIndex === params.phiSegments
-          || ((!closed) && heightIndex !== 0
-          && heightIndex !== params.heightSegments && ( thetaIndex === 0 || thetaIndex === params.thetaSegments))) {
-          var vertex = new THREE.Vector3();
-          var segment = params.thetaStart + (thetaIndex * thetaStep);
-          vertex.x = (params.innerRadius + (phiIndex * phiStep)) * Math.cos(segment);
-          vertex.y = (params.innerRadius + (phiIndex * phiStep)) * Math.sin(segment);
-          vertex.z = heightStart + (heightIndex * heightStep);
-          this.vertices.push(vertex);
-          uvs.push(new THREE.Vector2((vertex.x / params.outerRadius + 1) / 2, (vertex.y / params.outerRadius + 1) / 2));
+  var heightStep = p.height / p.heightSegments;
+  var phiStep = (p.outerRadius - p.innerRadius) / p.phiSegments;
+  var thetaStep = p.thetaLength / p.thetaSegments;
+  var vIndex = -1;
+  for (heightIndex = 0; heightIndex <= p.heightSegments; heightIndex++) {
+    for (phiIndex = 0; phiIndex <= p.phiSegments; phiIndex++) {
+      for (thetaIndex = 0; thetaIndex < p.thetaSegments + (open ? 1 : 0); thetaIndex++) {
+        if (           heightIndex === 0 || heightIndex === p.heightSegments   // end faces
+          ||           phiIndex    === 0 || phiIndex    === p.phiSegments      // wall faces
+          || (open && (thetaIndex  === 0 || thetaIndex  === p.thetaSegments))) // segment faces
+        {
+          vIndex++;
+          v1 = new THREE.Vector3();
+          var segment = p.thetaStart + thetaIndex * thetaStep;
+          v1.x = (p.innerRadius + (phiIndex * phiStep)) * Math.cos(segment);
+          v1.y = (p.innerRadius + (phiIndex * phiStep)) * Math.sin(segment);
+          v1.z = (heightIndex * heightStep);
+          this.vertices.push(v1);
+          // wall faces
+          if (phiIndex === 0){
+            f.inner ? f.inner.push(vIndex) : f.inner = [vIndex];
+          }
+          if (phiIndex === p.phiSegments){
+            f.outer ? f.outer.push(vIndex) : f.outer = [vIndex];
+          }
+          // segment faces
+          if (open){
+            if (thetaIndex === 0){
+              f.start ? f.start.push(vIndex) : f.start = [vIndex];
+            }
+            if (thetaIndex === p.thetaSegments){
+              f.end ? f.end.push(vIndex) : f.end = [vIndex];
+            }
+            f.segment ? f.segment.push(vIndex) : f.segment = [vIndex];
+          }
+          // end faces
+          if (heightIndex === 0){
+            f.bottom ? f.bottom.push(vIndex) : f.bottom = [vIndex];
+          }
+          if (heightIndex === p.heightSegments){
+            f.top ? f.top.push(vIndex) : f.top = [vIndex];
+          }
         }
       }
     }
   }
 
+  // end faces
+  for (phiIndex = 0; phiIndex < p.phiSegments; phiIndex++) {
+    for (thetaIndex = 0; thetaIndex < p.thetaSegments; thetaIndex++) {
+      v1 = phiIndex * (p.thetaSegments + (open ? 1 : 0)) + thetaIndex;
+      v2 = v1 + (p.thetaSegments + (open ? 1 : 0));
+      v3 = phiIndex * (p.thetaSegments + (open ? 1 : 0)) + (closed ? (thetaIndex + 1) % p.thetaSegments : (thetaIndex + 1));
+      v4 = v3 + (p.thetaSegments + (open ? 1 : 0));
+      // bottom end
+      this.faces.push(new THREE.Face3(f.bottom[v1], f.bottom[v3], f.bottom[v4], [Vec(0,0,-1), Vec(0,0,-1), Vec(0,0,-1)]));
+      this.faces.push(new THREE.Face3(f.bottom[v4], f.bottom[v2], f.bottom[v1], [Vec(0,0,-1), Vec(0,0,-1), Vec(0,0,-1)]));
+      // top end
+      this.faces.push(new THREE.Face3(f.top[v1], f.top[v2], f.top[v4], [Vec(0,0,1), Vec(0,0,1), Vec(0,0,1)]));
+      this.faces.push(new THREE.Face3(f.top[v4], f.top[v3], f.top[v1], [Vec(0,0,1), Vec(0,0,1), Vec(0,0,1)]));
+    }
+  }
 
-  // add back faces
-  endFaces(-1);
+  // wall faces
+  for (heightIndex = 0; heightIndex < p.heightSegments; heightIndex++){
+    for (thetaIndex = 0; thetaIndex < p.thetaSegments; thetaIndex++){
+      v1 = heightIndex * (p.thetaSegments + (open ? 1 : 0)) + thetaIndex;
+      v2 = v1 + (p.thetaSegments + (open ? 1 : 0));
+      v3 = heightIndex * (p.thetaSegments + (open ? 1 : 0)) + (closed ? (thetaIndex + 1) % p.thetaSegments : (thetaIndex + 1));
+      v4 = v3 + (p.thetaSegments + (open ? 1 : 0));
+      n1 = Vec(-this.vertices[f.inner[v1]].x, -this.vertices[f.inner[v1]].y, 0).normalize();
+      n2 = Vec(-this.vertices[f.inner[v3]].x, -this.vertices[f.inner[v3]].y, 0).normalize();
+      n3 = Vec(this.vertices[f.outer[v1]].x, this.vertices[f.outer[v1]].y, 0).normalize();
+      n4 = Vec(this.vertices[f.outer[v3]].x, this.vertices[f.outer[v3]].y, 0).normalize();
+      // inner wall
+      this.faces.push(new THREE.Face3(f.inner[v1], f.inner[v2], f.inner[v4], [n1.clone(), n1.clone(), n2.clone()]));
+      this.faces.push(new THREE.Face3(f.inner[v4], f.inner[v3], f.inner[v1], [n2.clone(), n2.clone(), n1.clone()]));
+      // outer wall
+      this.faces.push(new THREE.Face3(f.outer[v1], f.outer[v3], f.outer[v4], [n3.clone(), n4.clone(), n4.clone()]));
+      this.faces.push(new THREE.Face3(f.outer[v4], f.outer[v2], f.outer[v1], [n4.clone(), n3.clone(), n3.clone()]));
+    }
+  }
 
-  // add front faces
-  endFaces(1);
+  // segment faces
+  if (open){
+    for (heightIndex = 0; heightIndex < p.heightSegments; heightIndex++){
+      for (phiIndex = 0; phiIndex < p.phiSegments; phiIndex++){
+        v1 = heightIndex * (p.phiSegments + 1) + phiIndex;
+        v2 = v1 + p.phiSegments + 1;
+        v3 = v1 + 1;
+        v4 = v3 + p.phiSegments + 1;
+        n1 = Vec(this.vertices[f.start[v1]].x, this.vertices[f.start[v1]].y, 0).normalize().applyAxisAngle(Vec(0,0,1), -Math.PI/2);
+        n2 = Vec(this.vertices[f.end[v1]].x, this.vertices[f.end[v1]].y, 0).normalize().applyAxisAngle(Vec(0,0,1), Math.PI/2);
+        // start wall
+        this.faces.push(new THREE.Face3(f.start[v4], f.start[v2], f.start[v1], [n1.clone(), n1.clone(), n1.clone()]));
+        this.faces.push(new THREE.Face3(f.start[v1], f.start[v3], f.start[v4], [n1.clone(), n1.clone(), n1.clone()]));
+        // end wall
+        this.faces.push(new THREE.Face3(f.end[v1], f.end[v2], f.end[v4], [n2.clone(), n2.clone(), n2.clone()]));
+        this.faces.push(new THREE.Face3(f.end[v4], f.end[v3], f.end[v1], [n2.clone(), n2.clone(), n2.clone()]));
+      }
+    }
+  }
 
-  // add inner faces
-  wallFaces();
-
-
-  /*
-
-   inner faces: [0 ... thetaSegments], [thetaSegments * phiSegments ...
-
-   */
-  this.computeFaceNormals()
-
-
+  this.computeFaceNormals();
 };
 
 THREE.RingGeometry3D.prototype = Object.create(THREE.Geometry.prototype);
+THREE.RingGeometry3D.prototype.constructor = THREE.RingGeometry3D;
+
+// Class Methods //
+
+THREE.RingGeometry3D.prototype.isClosed = function(){
+  return this.parameters.thetaLength === 2*Math.PI;
+};
