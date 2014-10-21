@@ -13,7 +13,7 @@ var rename  = require('gulp-rename');
 var rimraf = require('gulp-rimraf');
 // the paths to our app files
 var paths = {
-  scripts: ['client/app/**/*.js'],
+  scripts: ['app/**/*.js'],
   distscripts: ['dist/js/**/*.js'],
   html: ['client/pages/*.html', 'client/index.html'],
   disthtml: ['dist/pages/*.html', 'dist/index.html'],
@@ -33,7 +33,7 @@ gulp.task('lint', function() {
 // Start browser sync with the server
 gulp.task('start', ['serve'],function () {
   bs({
-    notify: true,
+    notify: false,
     injectChanges: true,
     files: paths.scripts.concat(paths.disthtml, paths.diststyles),
     proxy: 'localhost:1337'
