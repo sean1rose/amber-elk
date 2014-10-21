@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 var renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -53,29 +46,45 @@ var makeParticle = function(particle){
   return particle;
 };
 
-for (var p = 0; p < particleCount; p++){
-  particles.vertices.push(makeParticle());
+// adding sphere
+var Sphere = function(x, y, z, radius) {
+  sphere = new THREE.Mesh(new THREE.SphereGeometry(radius, 13, 17), new THREE.MeshNormalMaterial());
+  sphere.overdraw = true;
+  scene.add(sphere);
+  sphere.position.set(x, y, z)
+  return sphere;
 }
-var particleMaterial = new THREE.ParticleBasicMaterial({color: 0xffffff, size: 2, blending: THREE.AdditiveBlending, transparent: true});
-var particleSystem = new THREE.ParticleSystem(particles, particleMaterial);
-particleSystem.sortParticles = true;
-scene.add(particleSystem);
+var s = new Sphere(5, 100, 0, 35);
+var s2 = new Sphere(-30, 20, 50, 3)
+var random = function(){ return Math.random() * 100 -50;}
+for (var p = 0; p < particleCount; p++){
+  // console.log(p)
+  // console.log(random)
+  // particles.vertices.push(makeParticle());
+  particles.vertices.push(new Sphere(random(), random(), random(), 2));
+}
+// var particleMaterial = new THREE.ParticleBasicMaterial({color: 0xffffff, size: 2, blending: THREE.AdditiveBlending, transparent: true});
+// var particleSystem = new THREE.ParticleSystem(particles, particleMaterial);
+// particleSystem.sortParticles = true;
+// scene.add(particleSystem);
 
 var light = new THREE.HemisphereLight(0xfcfcfc, 0xfcfcfc, 0.99);
 light.position.set(0,0,230);
 scene.add(light);
 
 var update = function(){
-  particleSystem.rotation.z += 0.005;
+  // particleSystem.rotation.z += 0.005;
+  s.rotation.y += 0.02;
+  // s2.position.z += (s.rotation.y )
   var pCount = particleCount;
-  while (pCount--){
-    var particle = particles.vertices[pCount];
-    if (particle.z > camera.position.z || particle.y > window.innerHeight/2 || particle.y < -window.innerHeight/2 || particle.x > window.innerWidth/2 || particle.x < -window.innerWidth/2){
-      makeParticle(particle);
-    }
-    particle.add(particle.velocity);
-  }
-  particleSystem.geometry.__dirtyVertices = true;
+  // while (pCount--){
+  //   var particle = particles.vertices[pCount];
+  //   if (particle.z > camera.position.z || particle.y > window.innerHeight/2 || particle.y < -window.innerHeight/2 || particle.x > window.innerWidth/2 || particle.x < -window.innerWidth/2){
+  //     makeParticle(particle);
+  //   }
+  //   particle.add(particle.velocity);
+  // }
+  // particleSystem.geometry.__dirtyVertices = true;
   renderer.render(scene, camera);
   requestAnimationFrame(update);
 };
