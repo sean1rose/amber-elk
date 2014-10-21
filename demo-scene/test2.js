@@ -89,4 +89,3 @@ var update = function(){
   requestAnimationFrame(update);
 };
 
-update();
