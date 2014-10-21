@@ -21,6 +21,15 @@ var makeCubeAtOrigin = function(){
   cube.position.set(0,0,0)
 }();
 
+// plane as the ocean floor
+var plane = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshNormalMaterial());
+plane.overdraw = true;
+// plane.rotation.x = Math.PI
+plane.position.y = -200;
+plane.position.z = 10
+scene.add(plane);
+
+
 //setting the camera
 var camera = new THREE.PerspectiveCamera (50, window.innerWidth / window.innerHeight, 5, 1000);
 camera.position.set(player.position.x, player.position.y, player.position.z*1.3);
@@ -115,6 +124,7 @@ var update = function(){
   	}
   	spheres[s].position.z += 2;
   };
+  plane.rotation.x += .01
   renderer.render(scene, camera);
   requestAnimationFrame(update);
 };
