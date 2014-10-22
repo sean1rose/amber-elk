@@ -23,7 +23,7 @@ document.onkeydown = function(e) {
       movePlayer('y', -10)
       break;
 	}
-	console.log(camera.position, player.position)
+	// console.log(camera.position, player.position)
   camera.lookAt(new THREE.Vector3(0,0,0))
 };
 
@@ -33,8 +33,8 @@ var mouseY = 0;
 function mousePos (e) {
         mouseX = e.pageX; 
         mouseY = e.pageY;
-    player.position.set((mouseX-window.innerWidth/2)*.15, .15*(-(mouseY-window.innerHeight/2)), player.position.z)
-    console.log(player.position.x, player.position.y)
+    player.position.set((mouseX-window.innerWidth/2)*.25, .25*(-(mouseY-window.innerHeight/2)), player.position.z)
+    // console.log(player.position.x, player.position.y)
 
     return true;
 }
