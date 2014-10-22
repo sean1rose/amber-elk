@@ -16,12 +16,30 @@ body {
           UI Overrides
 *******************************/
 
+.team {
+  margin-bottom: 50px;
+}
+
 .heart {
   color: white;
 }
 
+.user {
+  color: white;
+}
+
+.github {
+  color: white;
+}
+
+.linkedin {
+  color: white;
+}
+
 .ui.header {
-  font-family: "Andale Mono", AndaleMono, monospace;
+  font-family: 'Idlewild A', 'Idlewild B';
+  font-weight: 300;
+  font-style: normal;
 }
 
 .ui.header,
@@ -46,10 +64,14 @@ h3.ui.header {
   color: white;
 }
 
-h4.ui.header,
-h5.ui.header,
+h4.ui.header
 .ui.icon.header {
   font-weight: bold !important;
+}
+
+h5.ui.header {
+  font-size: .95em;
+  line-height: 150%;
 }
 
 .ui.button.playbutton {
@@ -60,10 +82,27 @@ h5.ui.header,
 
 #amber-elk-header {
   color: white;
+  font-family: 'Idlewild A', 'Idlewild B';
+  font-weight: 600;
+  font-style: normal;
 }
 
 #deep-header {
-  color: white;
+  color: #AEE9EF;
+  font-family: "Andale Mono", AndaleMono, monospace;
+  line-height: 150%;
+  text-transform: uppercase;
+  display: block;
+  font-style: normal;
+}
+
+.about-name{
+  color: #AEE9EF;
+  font-family: "Andale Mono", AndaleMono, monospace;
+  line-height: 150%;
+  text-transform: uppercase;
+  display: block;
+  font-style: normal;  
 }
 
 .ui.button {
@@ -128,6 +167,10 @@ p {
 
 .menu .right.menu > .mobile.item {
   display: none;
+}
+
+.ui.page.grid {
+  padding: 0 0%;
 }
 
 .ui.page.grid.segment {
