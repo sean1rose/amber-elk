@@ -4,7 +4,7 @@
 
 /**
  * Creates a new RingArray with the specified radius.
- * @param radius
+ * @param {float} radius
  * @constructor
  * @augments THREE.Object3D
  * @classdesc A self-balancing ring-shaped array of THREE.Object3D or THREE.Mesh objects.
