@@ -4,13 +4,14 @@ var bs = require('browser-sync');
 var nodemon = require('gulp-nodemon');
 var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
-var mocha = require('gulp-mocha');
+var karma = require('karma').server;
 var jsdoc = require('gulp-jsdoc');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 var cssmin = require('gulp-cssmin');
 var rename  = require('gulp-rename');
 var rimraf = require('gulp-rimraf');
+
 // the paths to our app files
 var paths = {
   scripts: ['app/**/*.js'],
@@ -25,7 +26,7 @@ var paths = {
 
 // JS HINT on both client js and server js
 gulp.task('lint', function() {
-  return gulp.src(paths.scripts)
+  gulp.src('app/**/[^OrbitControls]*.js')
     .pipe(jshint())
     .pipe(jshint.reporter(stylish));
 });
@@ -46,9 +47,13 @@ gulp.task('serve', function() {
 });
 
 // Mocha testing
-gulp.task('test', function() {
-  return gulp.src(paths.tests, {read: false})
-    .pipe(mocha({reporter: 'nyan'}));
+gulp.task('test', function(done) {
+  //return gulp.src(paths.tests, {read: false})
+    //.pipe(mocha({reporter: 'nyan'}));
+  karma.start({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done);
 });
 
 // Minify Javascript
