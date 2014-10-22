@@ -16,6 +16,10 @@ body {
           UI Overrides
 *******************************/
 
+.team {
+  margin-bottom: 50px;
+}
+
 .heart {
   color: white;
 }
