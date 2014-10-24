@@ -18,7 +18,7 @@ var Player = function(){
 // var material = new THREE.MeshLambertMaterial({color: 0x1BC32F, transparent: true, opacity: 0.9});
 // var player = new THREE.Mesh(geometry, material);
 // player.radius = 15;
-var player = Player();
+var player = new PlayerCharacter();
 scene.add(player);
 player.position.set(0,0,500);
 
@@ -128,10 +128,11 @@ var checkCollision = function(s) {
   var dx = player.position.x - cubes[s].position.x;
   var dy = player.position.y - cubes[s].position.y;
   var distance = Math.sqrt( Math.pow(dx, 2) + Math.pow(dy, 2) );
-  if (distance < player.radius && cubes[s].active !== false) {
+  if (distance < 15 && cubes[s].active !== false) { //COLLISION
     console.log('collision');
+    scene.remove(cubes[s])
+    player.levelUp();
     cubes[s].active = false;
-    scene.remove( cubes[s] )
   }
 }
 
@@ -152,6 +153,7 @@ var update = function(){
   	}
   	cubes[s].position.z += 2;
   };
+  player.animate();
   renderer.render(scene, camera);
   requestAnimationFrame(update);
 };
