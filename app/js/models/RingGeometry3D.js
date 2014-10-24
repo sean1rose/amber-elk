@@ -72,7 +72,7 @@ THREE.RingGeometry3D = function (outerRadius, innerRadius, height, thetaSegments
           var segment = p.thetaStart + thetaIndex * thetaStep;
           v1.x = (p.innerRadius + (phiIndex * phiStep)) * Math.cos(segment);
           v1.y = (p.innerRadius + (phiIndex * phiStep)) * Math.sin(segment);
-          v1.z = (heightIndex * heightStep);
+          v1.z = heightIndex * heightStep - p.height / 2;
           this.vertices.push(v1);
           // wall faces
           if (phiIndex === 0){
