@@ -1,8 +1,3 @@
-// var chai = require('chai');
-// var assert = chai.assert;
-// var should = chai.should();
-// var expect = chai.expect;
-
 var xdescribe = function() {
 
 };
@@ -27,10 +22,10 @@ xdescribe('Enemy Model', function() {
   })
 
   it('should initialize enemy properties with default values', function(){
-    expect(enemy).to.have.property('size').and.to.not.equal(undefined);
-    expect(enemy).to.have.property('xCoord').and.to.not.equal(undefined);
-    expect(enemy).to.have.property('yCoord').and.to.not.equal(undefined);
-    expect(enemy).to.have.property('zCoord').and.to.not.equal(undefined);
+    expect(enemy).to.have.property('size');
+    expect(enemy).to.have.property('xCoord');
+    expect(enemy).to.have.property('yCoord');
+    expect(enemy).to.have.property('zCoord');
   });
 
   // TODO - how is movement handled? Does everything on the far end plane move towards the player? 
