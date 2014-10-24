@@ -17,7 +17,10 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'dist/js/vendor.min.js',
+      'client/bower_components/jquery/dist/jquery.min.js',
+      'client/bower_components/firebase/firebase.js',
+      'client/bower_components/three.js/three.min.js',
+      'client/bower_components/semantic/build/packaged/javascript/semantic.min.js',
       'app/**/*.js',
       'tests/**/*.js'
     ],
