@@ -4,7 +4,7 @@
 
 /**
  * Creates a new RingArray with the specified radius.
- * @param {float} radius
+ * @param {number} radius
  * @constructor
  * @augments THREE.Object3D
  * @classdesc A self-balancing ring-shaped array of THREE.Object3D or THREE.Mesh objects.
@@ -22,7 +22,11 @@ THREE.RingArray.prototype.constructor = THREE.RingArray;
  */
 THREE.RingArray.prototype.rebalance = function(){
   for (var i = 0; i < this.children.length; i++){
-    this.children[i].position.set(this.radius * Math.cos(i * 2 * Math.PI / this.children.length), this.radius * Math.sin(i * 2 * Math.PI / this.children.length), 0);
+    var x = this.radius * Math.cos(i * 2 * Math.PI / this.children.length);
+    var y = this.radius * Math.sin(i * 2 * Math.PI / this.children.length);
+    var z = 0;
+    this.children[i].position.set(x, y, z);
+    this.children[i].rotation.z = i * 2*Math.PI/this.children.length;
   }
 };
 
