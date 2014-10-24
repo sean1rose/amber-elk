@@ -19,7 +19,6 @@ module.exports = function(config) {
     files: [
       'dist/js/vendor.min.js',
       'app/**/*.js',
-      //'dist/js/main.min.js',
       'tests/**/*.js'
     ],
 
