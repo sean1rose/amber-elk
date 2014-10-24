@@ -51,8 +51,7 @@ gulp.task('serve', function() {
 gulp.task('test', ['build'], function(done) {
   // Use Karma to run Mocha tests
   karma.start({
-    configFile: __dirname + '/karma.conf.js',
-    singleRun: true
+    configFile: __dirname + '/karma.conf.js'
   }, done);
 });
 
@@ -104,7 +103,7 @@ gulp.task('copystatic', function() {
   gulp.src(['client/bower_components/semantic/build/packaged/fonts/**.*'])
     .pipe(gulp.dest('dist/fonts'));
 });
-// Remove the dist folder to properly regenerate it
+// Remove the dist folder
 gulp.task('cleanup', function() {
   return gulp.src(['dist/**/*.*'], {read: false})
     .pipe(rimraf());

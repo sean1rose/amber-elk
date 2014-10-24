@@ -1,6 +1,8 @@
 // Karma configuration
 // Generated on Tue Oct 21 2014 15:13:10 GMT-0700 (PDT)
 
+'use strict';
+
 module.exports = function(config) {
   config.set({
 
@@ -16,7 +18,8 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'dist/js/vendor.min.js',
-      'dist/js/main.min.js',
+      'app/**/*.js',
+      //'dist/js/main.min.js',
       'tests/**/*.js'
     ],
 
@@ -29,8 +32,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'app/**/*.js' : ['coverage'],
-      'app/*.js' : ['coverage']
+      'app/**/[^OrbitControls]*.js' : ['coverage']
     },
 
 
@@ -43,6 +45,12 @@ module.exports = function(config) {
     // web server port
     port: 9876,
 
+
+    // Configure the reporter
+    coverageReporter: {
+      type: 'html',
+      dir: 'coverage/'
+    },
 
     // enable / disable colors in the output (reporters and logs)
     colors: true,
