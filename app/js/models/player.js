@@ -57,6 +57,60 @@ PlayerCharacter.prototype.levelUp = function(){
     this.layers[6].add(new THREE.Mesh(new THREE.BoxGeometry(8,2,4,4,2,3), randomMaterial('b')));
     return this.level
   }
+  if (this.level === 38){
+    this.add(this.layers[7]);
+    this.layers[7].add(new THREE.Mesh(new THREE.BoxGeometry(4,8,2,4,3,2), randomMaterial()));
+    return this.level;
+  }
+  if (this.level < 51){
+    this.layers[7].add(new THREE.Mesh(new THREE.BoxGeometry(4,8,2,4,3,2), randomMaterial()));
+    return this.level;
+  }
+};
+
+PlayerCharacter.prototype.levelDown = function(){
+  this.level--;
+  if (this.level > 37){
+    this.layers[7].remove(this.layers[7].children[this.layers[7].children.length - 1]);
+    return this.level;
+  }
+  if (this.level === 37){
+    this.layers[7].remove(this.layers[7].children[this.layers[7].children.length - 1]);
+    this.remove(this.layers[7]);
+    return this.level;
+  }
+  if (this.level > 24){
+    this.layers[6].remove(this.layers[6].children[this.layers[6].children.length - 1]);
+    return this.level;
+  }
+  if (this.level === 24){
+    this.layers[6].remove(this.layers[6].children[this.layers[6].children.length - 1]);
+    this.remove(this.layers[6]);
+    return this.level;
+  }
+  if (this.level > 4){
+    this.layers[5].remove(this.layers[5].children[this.layers[5].children.length - 1]);
+    return this.level;
+  }
+  if (this.level === 4){
+    this.layers[5].remove(this.layers[5].children[this.layers[5].children.length - 1]);
+    this.remove(this.layers[5]);
+    return this.level;
+  }
+  if (this.level > 0){
+    this.remove(this.layers[this.level + 1]);
+    return this.level
+  }
+  if (this.level === 0){
+    this.layers[0].remove(this.baseRingSplit);
+    this.layers[0].add(this.baseRing);
+    this.remove(this.layers[1]);
+    return this.level;
+  }
+  if (this.level < 0){
+    this.remove(this.layers[0]);
+    alert('Game over');
+  }
 };
 
 PlayerCharacter.prototype.animate = function(){
@@ -89,10 +143,14 @@ var randomMaterial = function(color){
   } else if (color === 'b'){
     color = b[Math.floor(Math.random() * b.length)];
   } else {
-    return null;
+    color = [r,g,b][Math.floor(Math.random() * 3)][Math.floor(Math.random() * 5)];
   }
   var mat = new THREE.MeshLambertMaterial({color: color, transparent: true, opacity: 0.5});
   mat.castShadow = true;
   mat.receiveShadow = true;
+
   return mat;
 };
+
+
+
