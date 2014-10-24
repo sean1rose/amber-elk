@@ -1,6 +1,8 @@
 // Karma configuration
 // Generated on Tue Oct 21 2014 15:13:10 GMT-0700 (PDT)
 
+'use strict';
+
 module.exports = function(config) {
   config.set({
 
@@ -15,8 +17,11 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'dist/js/vendor.min.js',
-      'dist/js/main.min.js',
+      'client/bower_components/jquery/dist/jquery.min.js',
+      'client/bower_components/firebase/firebase.js',
+      'client/bower_components/three.js/three.min.js',
+      'client/bower_components/semantic/build/packaged/javascript/semantic.min.js',
+      'app/**/*.js',
       'tests/**/*.js'
     ],
 
@@ -29,6 +34,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      'app/**/[^OrbitControls]*.js' : ['coverage']
     },
 
 
@@ -42,6 +48,12 @@ module.exports = function(config) {
     port: 9876,
 
 
+    // Configure the reporter
+    coverageReporter: {
+      type: 'html',
+      dir: 'coverage/'
+    },
+
     // enable / disable colors in the output (reporters and logs)
     colors: true,
 
@@ -52,7 +64,7 @@ module.exports = function(config) {
 
 
     // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
+    autoWatch: false,
 
 
     // start these browsers
