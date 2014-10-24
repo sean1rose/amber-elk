@@ -114,7 +114,7 @@ gulp.task('reloadpage', function(){
   bs.reload();
 });
 // Build for production
-gulp.task('build', ['cleanup', 'copystatic', 'bowerbuildjs', 'bowerbuildcss', 'minjs', 'mincss']);
+gulp.task('build', ['copystatic', 'bowerbuildjs', 'bowerbuildcss', 'minjs', 'mincss']);
 
 // Get ready for deployment
 gulp.task('deploy', ['lint', 'build', 'test']);
