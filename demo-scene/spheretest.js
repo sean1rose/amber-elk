@@ -131,19 +131,23 @@ var floorLightHelper = new THREE.SpotLightHelper( floorLight, 10 )
 scene.add( floorLight );
 // scene.add(floorLightHelper);
 
-var checkCollision = function(obj) {
+var checkCollision = function(obj) { // returns boolean
   var dx = player.position.x - obj.position.x;
   var dy = player.position.y - obj.position.y;
   var distance = Math.sqrt( Math.pow(dx, 2) + Math.pow(dy, 2) );
   if (distance < 15 && obj.active !== false) { //COLLISION with target
+    obj.active = false;
     return true;
   } else {
     return false
   }
 }
-
-// var ambientLight = new THREE.AmbientLight(000080);
-// scene.add(ambientLight);
+var collision = function(obj){
+  console.log('collision');
+  scene.remove(obj);
+  cubes.push( new Cube() );
+  player.levelUp();
+}
 
 var update = function(){
   particleSystem.rotation.z += 0.001;
@@ -151,11 +155,7 @@ var update = function(){
   for (var s = 0; s < cubes.length; s++) {
     if( cubes[s].position.z > (player.position.z - cubes[s].radius) && cubes[s].position.z < (player.position.z + cubes[s].radius)) {
       if( checkCollision(cubes[s]) ){
-        console.log('collision');
-        scene.remove(cubes[s])
-        cubes.push( new Cube() )
-        player.levelUp();
-        cubes[s].active = false;
+        collision(cubes[s]);
       }
     }
   	if( cubes[s].position.z > player.position.z+(camera.position.z - player.position.z)/4) {
@@ -177,6 +177,7 @@ var update = function(){
       enemies[e].position.z = -710;
       enemies[e].position.x = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
       enemies[e].position.y = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
+      enemies[e].active = true;
     }
     enemies[e].position.z += 3;
     enemies[e].rotation.y += Math.random()*.02;
