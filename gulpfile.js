@@ -12,7 +12,7 @@ var cssmin = require('gulp-cssmin');
 var rename  = require('gulp-rename');
 var rimraf = require('gulp-rimraf');
 
-// the paths to our app files
+// the paths to our files
 var paths = {
   scripts: ['app/**/*.js'],
   distscripts: ['dist/js/**/*.js'],
@@ -26,6 +26,7 @@ var paths = {
 
 // JS HINT on both client js and server js
 gulp.task('lint', function() {
+  // Lint app files
   gulp.src('app/**/[^OrbitControls]*.js')
     .pipe(jshint())
     .pipe(jshint.reporter(stylish));
@@ -46,10 +47,9 @@ gulp.task('serve', function() {
   nodemon({script: 'server/index.js', ignore: 'node_modules/**/*.js'});
 });
 
-// Mocha testing
-gulp.task('test', function(done) {
-  //return gulp.src(paths.tests, {read: false})
-    //.pipe(mocha({reporter: 'nyan'}));
+// Testing
+gulp.task('test', ['build'], function(done) {
+  // Use Karma to run Mocha tests
   karma.start({
     configFile: __dirname + '/karma.conf.js',
     singleRun: true
@@ -109,7 +109,7 @@ gulp.task('cleanup', function() {
   return gulp.src(['dist/**/*.*'], {read: false})
     .pipe(rimraf());
 });
-
+// Task to reload the page while browser sync is running
 gulp.task('reloadpage', function(){
   bs.reload();
 });
