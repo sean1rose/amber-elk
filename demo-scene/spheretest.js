@@ -1,36 +1,34 @@
 // creating the scene. 
 var renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMapEnabled = true;
 document.body.appendChild(renderer.domElement);
 var scene = new THREE.Scene();
 
 // setting the player
 var geometry = new THREE.RingGeometry(10, 15, 18);
-var material = new THREE.MeshLambertMaterial({color: 0xff0000, transparent: true, opacity: 0.9});
+var material = new THREE.MeshLambertMaterial({color: 0x1BC32F, transparent: true, opacity: 0.9});
 var player = new THREE.Mesh(geometry, material);
+player.radius = 15;
 scene.add(player);
 player.position.set(0,0,500);
 
 
 // setting a cube to show the origin
 var makeCubeAtOrigin = function(){
-  var cubeGeometry = new THREE.BoxGeometry(3,5,1);
-  var cubeMaterial = new THREE.MeshBasicMaterial( { color: 'blue' } );
-  var cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
-  scene.add( cube );
-  cube.position.set(0,0,0)
+  var oCubeGeometry = new THREE.BoxGeometry(3,5,1);
+  var oCubeMaterial = new THREE.MeshLambertMaterial( { color: 0xEC752A } );
+  var oCube = new THREE.Mesh( oCubeGeometry, oCubeMaterial );
+  scene.add( oCube );
+  oCube.position.set(0,0,0)
 }();
 
 //setting the camera
-var camera = new THREE.PerspectiveCamera (50, window.innerWidth / window.innerHeight, 5, 1000);
-camera.position.set(player.position.x, player.position.y, player.position.z*1.3);
+var camera = new THREE.PerspectiveCamera (35, window.innerWidth / window.innerHeight, 5, 5000);
+camera.position.set(player.position.x, player.position.y, player.position.z*1.7);
 camera.lookAt(scene.position);
 
-
-
-
-var sphereCount = 20;
-var random = function(){ return Math.random() * 100 -50;}
+var cubeCount = 20;
 
 // particle settings
 var particleCount = 300;
@@ -54,7 +52,7 @@ var makeParticle = function(particle){
     particle = new THREE.Vector3(px, py, pz);
     // particle.velocity = new THREE.Vector3(vx, vy, vz);
   }
-  return particle;
+  return particle; //background star elements
 };
 
 for (var p = 0; p < particleCount; p++){
@@ -67,53 +65,83 @@ particleSystem.sortParticles = true;
 scene.add(particleSystem);
 // scene.add(particleSystemNeon);
 
-var Sphere = function() {
+var Cube = function(hexColor) {
   var sx = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
   var sy = .15*((Math.random() * window.innerHeight) - (window.innerHeight / 2));
-  var sz = Math.random() * 500 - 1000;  
+  var sz = Math.random() * camera.position.z - 1000;  
   var r = Math.random()*2 + 1.5;
-  var edge1 = Math.random()*5 + 5;
-  var edge2 = Math.random()*5 + 5;
-  sphere = new THREE.Mesh(new THREE.SphereGeometry(r, edge1, edge2), new THREE.MeshNormalMaterial());
-  sphere.overdraw = true;
-  scene.add(sphere);
-  sphere.position.set(sx, sy, sz)
-  return sphere;
+  cube = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), new THREE.MeshLambertMaterial({ color : hexColor }) );
+  cube.radius = r
+  cube.overdraw = true;
+  scene.add( cube );
+  cube.position.set(sx, sy, sz);
+  cube.castShadow = true;
+  return cube;
 }
-var makeSpheres = function(){
-  var spheres = [];
-	for (var i = 0; i<sphereCount; i++){
-		spheres.push(new Sphere())
+var makeCubes = function(){
+  var cubes = [];
+	for (var i = 0; i<cubeCount; i++){
+    if(i < cubeCount/2){
+  		cubes.push(new Cube(0x2BF149)) // green
+    } else {
+      cubes.push(new Cube(0x50D8F4)) // blue
+    }
+
 	}
-  return spheres
+  return cubes
 }
-var spheres = makeSpheres();
+var cubes = makeCubes();
 
-var ambientLight = new THREE.AmbientLight(000080);
-scene.add(ambientLight);
+// floor
+var floor = new THREE.Mesh(new THREE.BoxGeometry(400, 3, 3000), new THREE.MeshLambertMaterial({ color : 0x361379 }) );
+floor.position.set(0, -300, -500);
+floor.receiveShadow = true;
+scene.add( floor )
 
-// var light = new THREE.HemisphereLight(000080, 000080, 0.99);
-// light.position.set(0,0,230);
-// scene.add(light);
+//lighting
+var light = new THREE.HemisphereLight(0xEC752A, 0x505AF4, 0.9);
+scene.add(light);
 
+var floorLight = new THREE.SpotLight(0xF4F6B1); // bright yellow/white
+floorLight.castShadow = true;
+floorLight.shadowDarkness = 0.5;
+floorLight.shadowMapWidth = 1024;
+floorLight.shadowMapHeight = 1024;
+floorLight.shadowCameraNear = 1;
+floorLight.shadowCameraFar = 1000;
+floorLight.target = floor;
+floorLight.position.set(0, 500, (player.position.z / 2) );
+var floorLightHelper = new THREE.SpotLightHelper( floorLight, 10 )
+scene.add( floorLight );
+scene.add(floorLightHelper);
+
+var checkCollision = function(s) {
+  var dx = player.position.x - cubes[s].position.x;
+  var dy = player.position.y - cubes[s].position.y;
+  var distance = Math.sqrt( Math.pow(dx, 2) + Math.pow(dy, 2) );
+  console.log(distance, player.radius)
+  if (distance < player.radius && cubes[s].active !== false) {
+    console.log('collision');
+    cubes[s].active = false;
+  }
+}
+
+// var ambientLight = new THREE.AmbientLight(000080);
+// scene.add(ambientLight);
 
 var update = function(){
   particleSystem.rotation.z += 0.001;
-  // particleSystemNeon.rotation.z += 0.8;
-  var pCount = particleCount
-  // while (pCount--){
-  //   var particle = particles.vertices[pCount];
-  //   if (particle.z > camera.position.z || particle.y > window.innerHeight/2 || particle.y < -window.innerHeight/2 || particle.x > window.innerWidth/2 || particle.x < -window.innerWidth/2){
-  //     makeParticle(particle);
-  //   }
-  //   particle.add(particle.velocity);
-  // }
   particleSystem.geometry.__dirtyVertices = true;
-  for (var s = 0; s < spheres.length; s++) {
-  	if( spheres[s].position.z > camera.position.z) {
-  		spheres[s].position.z = -710;
+  for (var s = 0; s < cubes.length; s++) {
+    if( cubes[s].position.z > (player.position.z - cubes[s].radius) && cubes[s].position.z < (player.position.z + cubes[s].radius)) {
+      checkCollision(s)
+    }
+  	if( cubes[s].position.z > player.position.z+(camera.position.z - player.position.z)/2) {
+  		cubes[s].position.z = -710;
+      cubes[s].position.x = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
+      cubes[s].position.y = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
   	}
-  	spheres[s].position.z += 2;
+  	cubes[s].position.z += 2;
   };
   renderer.render(scene, camera);
   requestAnimationFrame(update);
