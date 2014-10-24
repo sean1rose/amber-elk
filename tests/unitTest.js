@@ -1,8 +1,3 @@
-// var chai = require('chai');
-// var assert = chai.assert;
-// var should = chai.should();
-// var expect = chai.expect;
-//
 describe('amber-elk', function(){
 
   describe('playername', function(){
@@ -110,4 +105,4 @@ describe('amber-elk', function(){
    // it('should have a function that ')
   })
 
-})
+});

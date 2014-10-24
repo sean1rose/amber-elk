@@ -1,17 +1,13 @@
-// var chai = require('chai');
-// var assert = chai.assert;
-// var should = chai.should();
-// var expect = chai.expect;
-
 var xdescribe = function() {
 
 };
 
 // Remove the "x" here to run the tests
 xdescribe('Player Model', function() {
+  var player;
   // Create player object before each test
   beforeEach(function() {
-    var player = new PlayerCharacter();
+    player = new PlayerCharacter();
   });
 
   it('should have a size', function() {
