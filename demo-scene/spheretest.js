@@ -23,14 +23,14 @@ scene.add(player);
 player.position.set(0,0,500);
 
 
-// setting a cube to show the origin
-var makeCubeAtOrigin = function(){
-  var oCubeGeometry = new THREE.BoxGeometry(3,5,1);
-  var oCubeMaterial = new THREE.MeshLambertMaterial( { color: 0xEC752A } );
-  var oCube = new THREE.Mesh( oCubeGeometry, oCubeMaterial );
-  scene.add( oCube );
-  oCube.position.set(0,0,0)
-}();
+// // setting a cube to show the origin
+// var makeCubeAtOrigin = function(){
+//   var oCubeGeometry = new THREE.BoxGeometry(3,5,1);
+//   var oCubeMaterial = new THREE.MeshLambertMaterial( { color: 0xEC752A } );
+//   var oCube = new THREE.Mesh( oCubeGeometry, oCubeMaterial );
+//   scene.add( oCube );
+//   oCube.position.set(0,0,0)
+// }();
 
 //setting the camera
 var camera = new THREE.PerspectiveCamera (35, window.innerWidth / window.innerHeight, 5, 5000);
@@ -73,16 +73,16 @@ particleSystem.sortParticles = true;
 scene.add(particleSystem);
 // scene.add(particleSystemNeon);
 
-var Cube = function(hexColor) {
-  var sx = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
-  var sy = .15*((Math.random() * window.innerHeight) - (window.innerHeight / 2));
-  var sz = Math.random() * camera.position.z - 1000;  
-  var r = Math.random()*2 + 1.5;
-  cube = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), new THREE.MeshLambertMaterial({ color : hexColor }) );
-  cube.radius = r
+var Cube = function(hexColor, edgeLength) {
+  var x = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
+  var y = .15*((Math.random() * window.innerHeight) - (window.innerHeight / 2));
+  var z = Math.random() * camera.position.z - 1000;  
+  var e = edgeLength || Math.random()*2 + 1.5;
+  cube = new THREE.Mesh(new THREE.BoxGeometry(e, e, e), new THREE.MeshLambertMaterial({ color : hexColor || 0x2BF149 }) );
+  cube.radius = e;
   cube.overdraw = true;
   scene.add( cube );
-  cube.position.set(sx, sy, sz);
+  cube.position.set(x, y, z);
   cube.castShadow = true;
   return cube;
 }
@@ -96,11 +96,11 @@ var makeCubes = function(){
 }
 var cubes = makeCubes();
 
-var enemyCount = 20;
+var enemyCount = 7;
 var makeEnemies = function(){
   var enemies = [];
   for( var i = 0; i < enemyCount; i++ ){
-    var x = new Cube(0x50D8F4); //blue
+    var x = new Cube(0x50D8F4, 10); //blue
     enemies.push(x)
   }
   return enemies;
@@ -153,6 +153,7 @@ var update = function(){
       if( checkCollision(cubes[s]) ){
         console.log('collision');
         scene.remove(cubes[s])
+        cubes.push( new Cube() )
         player.levelUp();
         cubes[s].active = false;
       }
@@ -177,7 +178,9 @@ var update = function(){
       enemies[e].position.x = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
       enemies[e].position.y = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
     }
-    enemies[e].position.z += 3
+    enemies[e].position.z += 3;
+    enemies[e].rotation.y += Math.random()*.02;
+    enemies[e].rotation.x += Math.random()*.02;
   }
 
   player.animate();
