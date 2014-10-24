@@ -6,10 +6,19 @@ document.body.appendChild(renderer.domElement);
 var scene = new THREE.Scene();
 
 // setting the player
-var geometry = new THREE.RingGeometry(10, 15, 18);
-var material = new THREE.MeshLambertMaterial({color: 0x1BC32F, transparent: true, opacity: 0.9});
-var player = new THREE.Mesh(geometry, material);
-player.radius = 15;
+var Player = function(){
+  var geometry = new THREE.RingGeometry(10, 15, 18);
+  var material = new THREE.MeshLambertMaterial({color: 0x1BC32F, transparent: true, opacity: 0.9});
+  var player = new THREE.Mesh(geometry, material);
+  player.castShadow = true;
+  player.radius = 15;
+  return player
+}
+// var geometry = new THREE.RingGeometry(10, 15, 18);
+// var material = new THREE.MeshLambertMaterial({color: 0x1BC32F, transparent: true, opacity: 0.9});
+// var player = new THREE.Mesh(geometry, material);
+// player.radius = 15;
+var player = Player();
 scene.add(player);
 player.position.set(0,0,500);
 
@@ -93,8 +102,8 @@ var makeCubes = function(){
 var cubes = makeCubes();
 
 // floor
-var floor = new THREE.Mesh(new THREE.BoxGeometry(400, 3, 3000), new THREE.MeshLambertMaterial({ color : 0x361379 }) );
-floor.position.set(0, -300, -500);
+var floor = new THREE.Mesh(new THREE.BoxGeometry(400, 3, 3000), new THREE.MeshLambertMaterial({ color : 0x91FF9E }) );
+floor.position.set(0, -100, -500);
 floor.receiveShadow = true;
 scene.add( floor )
 
@@ -109,20 +118,20 @@ floorLight.shadowMapWidth = 1024;
 floorLight.shadowMapHeight = 1024;
 floorLight.shadowCameraNear = 1;
 floorLight.shadowCameraFar = 1000;
-floorLight.target = floor;
-floorLight.position.set(0, 500, (player.position.z / 2) );
+floorLight.target = player;
+floorLight.position.set(0, 500, player.position.z);
 var floorLightHelper = new THREE.SpotLightHelper( floorLight, 10 )
 scene.add( floorLight );
-scene.add(floorLightHelper);
+// scene.add(floorLightHelper);
 
 var checkCollision = function(s) {
   var dx = player.position.x - cubes[s].position.x;
   var dy = player.position.y - cubes[s].position.y;
   var distance = Math.sqrt( Math.pow(dx, 2) + Math.pow(dy, 2) );
-  console.log(distance, player.radius)
   if (distance < player.radius && cubes[s].active !== false) {
     console.log('collision');
     cubes[s].active = false;
+    scene.remove( cubes[s] )
   }
 }
 
