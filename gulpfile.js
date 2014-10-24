@@ -50,6 +50,7 @@ gulp.task('serve', function() {
 // Testing
 gulp.task('test', ['build'], function(done) {
   // Use Karma to run Mocha tests
+  // Automatically generates code coverage in the "/coverage" folder
   karma.start({
     configFile: __dirname + '/karma.conf.js'
   }, done);
