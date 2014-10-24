@@ -37,7 +37,6 @@ var camera = new THREE.PerspectiveCamera (35, window.innerWidth / window.innerHe
 camera.position.set(player.position.x, player.position.y, player.position.z*1.7);
 camera.lookAt(scene.position);
 
-var cubeCount = 20;
 
 // particle settings
 var particleCount = 300;
@@ -87,19 +86,27 @@ var Cube = function(hexColor) {
   cube.castShadow = true;
   return cube;
 }
+var cubeCount = 15;
 var makeCubes = function(){
   var cubes = [];
 	for (var i = 0; i<cubeCount; i++){
-    if(i < cubeCount/2){
-  		cubes.push(new Cube(0x2BF149)) // green
-    } else {
-      cubes.push(new Cube(0x50D8F4)) // blue
-    }
-
+  	cubes.push(new Cube(0x2BF149)) // green
 	}
   return cubes
 }
 var cubes = makeCubes();
+
+var enemyCount = 20;
+var makeEnemies = function(){
+  var enemies = [];
+  for( var i = 0; i < enemyCount; i++ ){
+    var x = new Cube(0x50D8F4); //blue
+    enemies.push(x)
+  }
+  return enemies;
+}
+var enemies = makeEnemies();
+console.log(enemies)
 
 // floor
 var floor = new THREE.Mesh(new THREE.BoxGeometry(400, 3, 3000), new THREE.MeshLambertMaterial({ color : 0x91FF9E }) );
@@ -124,15 +131,14 @@ var floorLightHelper = new THREE.SpotLightHelper( floorLight, 10 )
 scene.add( floorLight );
 // scene.add(floorLightHelper);
 
-var checkCollision = function(s) {
-  var dx = player.position.x - cubes[s].position.x;
-  var dy = player.position.y - cubes[s].position.y;
+var checkCollision = function(obj) {
+  var dx = player.position.x - obj.position.x;
+  var dy = player.position.y - obj.position.y;
   var distance = Math.sqrt( Math.pow(dx, 2) + Math.pow(dy, 2) );
-  if (distance < 15 && cubes[s].active !== false) { //COLLISION
-    console.log('collision');
-    scene.remove(cubes[s])
-    player.levelUp();
-    cubes[s].active = false;
+  if (distance < 15 && obj.active !== false) { //COLLISION with target
+    return true;
+  } else {
+    return false
   }
 }
 
@@ -144,15 +150,36 @@ var update = function(){
   particleSystem.geometry.__dirtyVertices = true;
   for (var s = 0; s < cubes.length; s++) {
     if( cubes[s].position.z > (player.position.z - cubes[s].radius) && cubes[s].position.z < (player.position.z + cubes[s].radius)) {
-      checkCollision(s)
+      if( checkCollision(cubes[s]) ){
+        console.log('collision');
+        scene.remove(cubes[s])
+        player.levelUp();
+        cubes[s].active = false;
+      }
     }
-  	if( cubes[s].position.z > player.position.z+(camera.position.z - player.position.z)/2) {
+  	if( cubes[s].position.z > player.position.z+(camera.position.z - player.position.z)/4) {
   		cubes[s].position.z = -710;
       cubes[s].position.x = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
       cubes[s].position.y = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
   	}
-  	cubes[s].position.z += 2;
+
+  	cubes[s].position.z += Math.random()+2;
   };
+
+  for (var e = 0; e < enemyCount; e++){
+    if( enemies[e].position.z > (player.position.z - enemies[e].radius) && enemies[e].position.z < (player.position.z + enemies[e].radius)) {
+      if( checkCollision(enemies[e]) ){
+        console.log('Level Down!')
+      }
+    }
+    if( enemies[e].position.z > player.position.z+(camera.position.z - player.position.z)/4) {
+      enemies[e].position.z = -710;
+      enemies[e].position.x = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
+      enemies[e].position.y = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
+    }
+    enemies[e].position.z += 3
+  }
+
   player.animate();
   renderer.render(scene, camera);
   requestAnimationFrame(update);
