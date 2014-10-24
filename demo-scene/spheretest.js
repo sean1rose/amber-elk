@@ -19,12 +19,12 @@ var makeCubeAtOrigin = function(){
 
 
 // setting the player
-var createPlayer = function(innerRadius, outerRadius, x, y, z){
+var createPlayer = function(innerRadius, x, y, z){
   x ? x = x : x = 0;
   y ? y = y : y = 0;
   z ? z = z : z = 200;
   var innerRadius = innerRadius || 10;
-  var outerRadius = outerRadius || 15;
+  var outerRadius = innerRadius*1.5;
   var geometry = new THREE.RingGeometry(innerRadius, outerRadius, 18);
   var material = new THREE.MeshLambertMaterial({color: 0xD1FF00, transparent: true, opacity: 0.9});
   var player = new THREE.Mesh(geometry, material);
@@ -49,26 +49,6 @@ scene.add(directionalLight);
 var playerLight = new THREE.SpotLight( 0xffffff );
 playerLight.position.set( 50, 90, 1000 );
 scene.add( playerLight );
-
-
-/*var spotLight = new THREE.SpotLight( 0xffffff );
-spotLight.position.set( 50, 90, 200 );
-spotLight.castShadow = true;
-
-spotLight.shadowCameraVisible = true;
-var d = 200;
-
-spotLight.shadowCameraLeft = -d;
-spotLight.shadowCameraRight = d;
-spotLight.shadowCameraTop = d;
-spotLight.shadowCameraBottom = -d;
-
-spotLight.shadowMapWidth = 512;
-spotLight.shadowMapHeight = 512;
-spotLight.shadowCameraNear = 1;
-spotLight.shadowCameraFar = 4000;
-// spotLight.shadowCameraFov = 30;
-scene.add( spotLight );*/
 
 //setting the ground
 var floor;
@@ -121,9 +101,10 @@ particleSystem.sortParticles = true;
 scene.add(particleSystem);
 
 var sphereCount = 20;
-var Sphere = function(min, max) {
-  var sx = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
-  var sy = .15*((Math.random() * window.innerHeight) - (window.innerHeight / 2));
+var sizeModifier = .15;
+var Sphere = function(max, color) {
+  var sx = sizeModifier*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
+  var sy = sizeModifier*((Math.random() * window.innerHeight) - (window.innerHeight / 2));
   var sz = (Math.random() * player.position.z) - player.position.z;  
   var r = Math.random()*max;
   var edge1 = Math.random()*5 + 5;
@@ -138,13 +119,13 @@ var Sphere = function(min, max) {
 var makeSpheres = function(){
   var spheres = [];
 	for (var i = 0; i<sphereCount; i++){
-		spheres.push(new Sphere(3, 10))
+		spheres.push( new Sphere(10) )
 	}
   return spheres
 }
 var spheres = makeSpheres();
 
-// calculate distance between player and enemy
+// calculate xy distance between player and enemy
 var findDistance = function(obj1, obj2) {
   var dx = obj1.position.x - obj2.position.x;
   var dy = obj1.position.y - obj2.position.y;
@@ -153,12 +134,11 @@ var findDistance = function(obj1, obj2) {
 
 var checkCollision = function(s){
   if( spheres[s].position.z > (player.position.z - spheres[s].radius) && spheres[s].position.z < (player.position.z + spheres[s].radius) ){ //check each enemy's position against the players position
-    // console.log(spheres[s].position.z)
-  // console.log(player.position.z)
     var d = findDistance(player, spheres[s])
-    if(d < player.radius){
+    if(d < player.radius && spheres[s].active !== false){ // collision occurs. change active property so several collisions dont happen with the same sphere
       console.log('Player radius ++!!!!')
-      console.log
+      scene.remove(spheres[s]);
+      spheres[s].active = false;
     }
   }
 }
@@ -171,6 +151,8 @@ var update = function(){
     checkCollision(s);
   	if( spheres[s].position.z > player.position.z+75) {
   		spheres[s].position.z = -750;
+      spheres[s].position.x = sizeModifier*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
+      spheres[s].position.y = sizeModifier*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
   	}
   	spheres[s].position.z += 2;
   };
