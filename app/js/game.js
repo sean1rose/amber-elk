@@ -1,3 +1,14 @@
+// mouse controls
+document.onmousemove = function (e) {mousePos(e);};
+var mouseX = 0;
+var mouseY = 0;
+function mousePos (e) {
+	mouseX = e.pageX; 
+	mouseY = e.pageY;
+	player.position.set((mouseX-window.innerWidth/2)*.25, .25*(-(mouseY-window.innerHeight/2)), player.position.z)
+	return true;
+}
+
 // creating the scene. 
 var renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -6,39 +17,16 @@ document.body.appendChild(renderer.domElement);
 var scene = new THREE.Scene();
 
 // setting the player
-var Player = function(){
-  var geometry = new THREE.RingGeometry(10, 15, 18);
-  var material = new THREE.MeshLambertMaterial({color: 0x1BC32F, transparent: true, opacity: 0.9});
-  var player = new THREE.Mesh(geometry, material);
-  player.castShadow = true;
-  player.radius = 15;
-  return player
-}
-// var geometry = new THREE.RingGeometry(10, 15, 18);
-// var material = new THREE.MeshLambertMaterial({color: 0x1BC32F, transparent: true, opacity: 0.9});
-// var player = new THREE.Mesh(geometry, material);
-// player.radius = 15;
 var player = new PlayerCharacter();
 scene.add(player);
 player.position.set(0,0,500);
-
-
-// // setting a cube to show the origin
-// var makeCubeAtOrigin = function(){
-//   var oCubeGeometry = new THREE.BoxGeometry(3,5,1);
-//   var oCubeMaterial = new THREE.MeshLambertMaterial( { color: 0xEC752A } );
-//   var oCube = new THREE.Mesh( oCubeGeometry, oCubeMaterial );
-//   scene.add( oCube );
-//   oCube.position.set(0,0,0)
-// }();
 
 //setting the camera
 var camera = new THREE.PerspectiveCamera (35, window.innerWidth / window.innerHeight, 5, 5000);
 camera.position.set(player.position.x, player.position.y, player.position.z*1.7);
 camera.lookAt(scene.position);
 
-
-// particle settings
+// background particle settings
 var particleCount = 300;
 var particles = new THREE.Geometry();
 
@@ -58,9 +46,8 @@ var makeParticle = function(particle){
     particle.velocity.z = vz;
   } else {
     particle = new THREE.Vector3(px, py, pz);
-    // particle.velocity = new THREE.Vector3(vx, vy, vz);
   }
-  return particle; //background star elements
+  return particle;
 };
 
 for (var p = 0; p < particleCount; p++){
@@ -68,11 +55,10 @@ for (var p = 0; p < particleCount; p++){
 }
 var particleMaterial = new THREE.ParticleBasicMaterial({color: 0xffffff, size: 2, blending: THREE.AdditiveBlending, transparent: true});
 var particleSystem = new THREE.ParticleSystem(particles, particleMaterial);
-// var particleSystemNeon = new THREE.ParticleSystem(particles, particleMaterial);
 particleSystem.sortParticles = true;
 scene.add(particleSystem);
-// scene.add(particleSystemNeon);
 
+// creating targets
 var Cube = function(hexColor, edgeLength) {
   var x = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
   var y = .15*((Math.random() * window.innerHeight) - (window.innerHeight / 2));
@@ -96,6 +82,7 @@ var makeCubes = function(){
 }
 var cubes = makeCubes();
 
+// creating enemies
 var enemyCount = 7;
 var makeEnemies = function(){
   var enemies = [];
@@ -108,9 +95,9 @@ var makeEnemies = function(){
 var enemies = makeEnemies();
 console.log(enemies)
 
-// floor
-var floor = new THREE.Mesh(new THREE.BoxGeometry(400, 3, 3000), new THREE.MeshLambertMaterial({ color : 0x91FF9E }) );
-floor.position.set(0, -100, -500);
+// setting the floor
+var floor = new THREE.Mesh(new THREE.BoxGeometry(800, 3, 3000), new THREE.MeshLambertMaterial({ color : 0x91FF9E }) );
+floor.position.set(0, -150, -500);
 floor.receiveShadow = true;
 scene.add( floor )
 
@@ -127,10 +114,9 @@ floorLight.shadowCameraNear = 1;
 floorLight.shadowCameraFar = 1000;
 floorLight.target = player;
 floorLight.position.set(0, 500, player.position.z);
-var floorLightHelper = new THREE.SpotLightHelper( floorLight, 10 )
 scene.add( floorLight );
-// scene.add(floorLightHelper);
 
+// collision logic
 var checkCollision = function(obj) { // returns boolean
   var dx = player.position.x - obj.position.x;
   var dy = player.position.y - obj.position.y;
@@ -142,6 +128,7 @@ var checkCollision = function(obj) { // returns boolean
     return false
   }
 }
+
 var collision = function(obj){
   console.log('collision');
   scene.remove(obj);
@@ -151,6 +138,7 @@ var collision = function(obj){
   player.levelUp();
 }
 
+// update functions
 var updateTargets = function(){
   for (var s = 0; s < cubes.length; s++) {
     if( cubes[s].position.z > (player.position.z - cubes[s].radius) && cubes[s].position.z < (player.position.z + cubes[s].radius)) {
@@ -187,6 +175,7 @@ var updateEnemies = function(){
   }
 }
 
+// general animation update
 var update = function(){
   particleSystem.rotation.z += 0.001;
   particleSystem.geometry.__dirtyVertices = true;
