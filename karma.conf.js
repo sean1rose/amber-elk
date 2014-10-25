@@ -70,7 +70,7 @@ module.exports = function(config) {
     autoWatch: false,
 
 
-// global config for SauceLabs
+    // global config for SauceLabs
     sauceLabs: {
       startConnect: true,
       testName: 'Amber Elk unit tests'
@@ -87,7 +87,7 @@ module.exports = function(config) {
     },
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: process.env.TRAVIS ? [ 'sl_chrome_7' ] : [ 'Chrome' ],
+    browsers: process.env.TRAVIS ? [ 'sl_chrome_OSX9' ] : [ 'Chrome' ],
 
 
     // Continuous Integration mode

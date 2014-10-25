@@ -7,10 +7,11 @@ install:
 - bower install
 env:
   global:
-  - secure: Eq1wk0NedKtABoJsT1plBtgXGU2+At5/dtKzge1GJI1hbJIOhiun17e51bO7xSd49DkOOyyI6aHP+zVC01HctaIuqJ27NrnOdan62XO+cF9JdErZ3vWF2r1mwy88uIhxuKEuYwlI4X4weNEJ5Eln0hmt6uheDpBpuXJ1/Q37deo=
-  - secure: S0GZ9gr+U85UD3zAdjybXUTGwrlVpEFSrZI1DAzAf5wZG0Z0m8orsA4grYpaKt9p8vUiZxX9+hPUfVYKVvPidFGFs9woIOLeDpyrSueboAfR67M/y9T78nPaQoWxBMNvNKnBo5rvmrGXeLjTp8mXEt2x+wEhMr5nc9e+XVSAO8U=
-  - secure: BlL1+Ue0a4t0czZJ7O7LrsQDs1IT5ZPKRrCMPX/Sg9tmekEkxwR/Q+5e3maMErd9T9lC61bQvMMl8tO8GlPxxKwPn0mUbAZ/uvDDnPRstnvaqwqyvMzbKBTsaoqNh+b2zaui94VYej40K7QecEHl2slprCWLbVMDXht+r4hDnOA=
-  - secure: I69jRsDK9A/TTKAyzDrHQi9Gq0eCg7V6bCdF4/qlomEsiqmRScv/orNf377jI+W3CviUp+WL/45qCo9tl7VfiZ7D7RpVmYZUUXkua2N2Agw4idw6j/HUDmlFqCptmxH+EZqxW5VsW+m41llm6P0MbQbtR1RUE5JjX7Fte7uWhNc=
+    - secure: Eq1wk0NedKtABoJsT1plBtgXGU2+At5/dtKzge1GJI1hbJIOhiun17e51bO7xSd49DkOOyyI6aHP+zVC01HctaIuqJ27NrnOdan62XO+cF9JdErZ3vWF2r1mwy88uIhxuKEuYwlI4X4weNEJ5Eln0hmt6uheDpBpuXJ1/Q37deo=
+    - secure: S0GZ9gr+U85UD3zAdjybXUTGwrlVpEFSrZI1DAzAf5wZG0Z0m8orsA4grYpaKt9p8vUiZxX9+hPUfVYKVvPidFGFs9woIOLeDpyrSueboAfR67M/y9T78nPaQoWxBMNvNKnBo5rvmrGXeLjTp8mXEt2x+wEhMr5nc9e+XVSAO8U=
+  matrix:
+    - secure: BlL1+Ue0a4t0czZJ7O7LrsQDs1IT5ZPKRrCMPX/Sg9tmekEkxwR/Q+5e3maMErd9T9lC61bQvMMl8tO8GlPxxKwPn0mUbAZ/uvDDnPRstnvaqwqyvMzbKBTsaoqNh+b2zaui94VYej40K7QecEHl2slprCWLbVMDXht+r4hDnOA=
+    - secure: I69jRsDK9A/TTKAyzDrHQi9Gq0eCg7V6bCdF4/qlomEsiqmRScv/orNf377jI+W3CviUp+WL/45qCo9tl7VfiZ7D7RpVmYZUUXkua2N2Agw4idw6j/HUDmlFqCptmxH+EZqxW5VsW+m41llm6P0MbQbtR1RUE5JjX7Fte7uWhNc=
 after_success:
 - mkdir /home/travis/tmp
 - sudo $(which npm) install -g firebase-tools
