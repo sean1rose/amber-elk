@@ -9,5 +9,8 @@ app.use('/css', express.static(path.join(__dirname + '/../dist/css')));
 app.use('/js', express.static(path.join(__dirname + '/../dist/js')));
 app.use('/public/images', express.static(path.join(__dirname + '/../dist/public/images')));
 app.use('/fonts', express.static(path.join(__dirname + '/../dist/public/fonts')));
+app.get('/game.html', function(req, res){
+	res.sendfile(__dirname + '/game.html');
+})
 // Listen on port 1337
 app.listen(1337);

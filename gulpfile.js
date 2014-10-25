@@ -14,7 +14,11 @@ var rimraf = require('gulp-rimraf');
 
 // the paths to our files
 var paths = {
-  scripts: ['app/**/*.js'],
+  scripts: [
+    'app/js/models/RingGeometry3D.js',
+    'app/js/models/RingArray.js',
+    'app/js/models/player.js',
+    'app/js/game.js'],
   distscripts: ['dist/js/**/*.js'],
   html: ['client/pages/*.html', 'client/*.html'],
   disthtml: ['dist/pages/*.html', 'dist/index.html'],
