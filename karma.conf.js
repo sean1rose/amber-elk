@@ -72,6 +72,7 @@ module.exports = function(config) {
 
     // global config for SauceLabs
     sauceLabs: {
+      startConnect: true,
       testName: 'Amber Elk unit tests'
     },
 
