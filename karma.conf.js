@@ -70,24 +70,9 @@ module.exports = function(config) {
     autoWatch: false,
 
 
-    // global config for SauceLabs
-    sauceLabs: {
-      startConnect: true,
-      testName: 'Amber Elk unit tests'
-    },
-
-    // define SL browsers
-    customLaunchers: {
-      sl_chrome_OSX9: {
-        base: 'SauceLabs',
-        browserName: 'chrome',
-        version: '31',
-        platform: 'OS X 10.9'
-      }
-    },
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: process.env.TRAVIS ? [ 'sl_chrome_OSX9' ] : [ 'Chrome' ],
+    browsers: process.env.TRAVIS ? [ 'Firefox' ] : [ 'Chrome' ],
 
 
     // Continuous Integration mode
