@@ -93,7 +93,6 @@ var makeEnemies = function(){
   return enemies;
 }
 var enemies = makeEnemies();
-console.log(enemies)
 
 // setting the floor
 var floor = new THREE.Mesh(new THREE.BoxGeometry(800, 3, 3000), new THREE.MeshLambertMaterial({ color : 0x91FF9E }) );
@@ -129,11 +128,18 @@ var checkCollision = function(obj) { // returns boolean
   }
 }
 
-var collision = function(obj){
-  console.log('collision');
+var targetCollision = function(obj){
   cubes.push( new Cube() );
   scene.remove(obj);
   player.levelUp();
+  score += 300;
+  $('#level').html("Level " + player.level);
+
+}
+
+var enemyCollision = function(enemy){
+  score -= 1000;
+  player.levelDown();
 }
 
 // update functions
@@ -141,7 +147,7 @@ var updateTargets = function(){
   for (var s = 0; s < cubes.length; s++) {
     if( cubes[s].position.z > (player.position.z - cubes[s].radius) && cubes[s].position.z < (player.position.z + cubes[s].radius)) {
       if( checkCollision(cubes[s]) ){
-        collision(cubes[s]);
+        targetCollision(cubes[s]);
       }
     }
     if( cubes[s].position.z > player.position.z+(camera.position.z - player.position.z)/4) {
@@ -157,8 +163,7 @@ var updateEnemies = function(){
   for (var e = 0; e < enemyCount; e++){
     if( enemies[e].position.z > (player.position.z - enemies[e].radius) && enemies[e].position.z < (player.position.z + enemies[e].radius)) {
       if( checkCollision(enemies[e]) ){
-        player.levelDown();
-        console.log('Level Down!')
+        enemyCollision( enemies[e] );
       }
     }
     if( enemies[e].position.z > player.position.z+(camera.position.z - player.position.z)/4) {
@@ -172,6 +177,8 @@ var updateEnemies = function(){
     enemies[e].rotation.x += Math.random()*.02;
   }
 }
+var score = 0;
+$('#level').html("Level ");
 
 // general animation update
 var update = function(){
@@ -179,8 +186,9 @@ var update = function(){
   particleSystem.geometry.__dirtyVertices = true;
   updateTargets();
   updateEnemies();
-
   player.animate();
+  score += player.level;
+  $('#score').html(score);
   renderer.render(scene, camera);
   requestAnimationFrame(update);
 };
