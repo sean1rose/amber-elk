@@ -131,10 +131,8 @@ var checkCollision = function(obj) { // returns boolean
 
 var collision = function(obj){
   console.log('collision');
-  scene.remove(obj);
   cubes.push( new Cube() );
-  console.log('test')
-  console.log(cubes.length)
+  scene.remove(obj);
   player.levelUp();
 }
 

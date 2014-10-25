@@ -16,7 +16,7 @@ var rimraf = require('gulp-rimraf');
 var paths = {
   scripts: ['app/**/*.js'],
   distscripts: ['dist/js/**/*.js'],
-  html: ['client/pages/*.html', 'client/index.html'],
+  html: ['client/pages/*.html', 'client/*.html'],
   disthtml: ['dist/pages/*.html', 'dist/index.html'],
   styles: ['client/styles/**/*.css'],
   diststyles: ['dist/css/**/*.css'],
@@ -95,7 +95,7 @@ gulp.task('bowerbuildcss', function() {
 });
 // Grab other static files
 gulp.task('copystatic', function() {
-  gulp.src(['client/index.html'])
+  gulp.src(['client/*.html'])
     .pipe(gulp.dest('dist'));
   gulp.src(['client/pages/**/*.html'])
     .pipe(gulp.dest('dist/pages'));
