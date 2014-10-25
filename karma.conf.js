@@ -21,7 +21,10 @@ module.exports = function(config) {
       'client/bower_components/firebase/firebase.js',
       'client/bower_components/three.js/three.min.js',
       'client/bower_components/semantic/build/packaged/javascript/semantic.min.js',
-      'app/**/*.js',
+      'app/js/models/RingGeometry3D.js',
+      'app/js/models/RingArray.js',
+      'app/js/models/player.js',
+      'app/js/game.js',
       'tests/**/*.js'
     ],
 
