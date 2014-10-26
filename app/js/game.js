@@ -83,17 +83,16 @@ var makeCubes = function(){
 var cubes = makeCubes();
 
 // creating enemies
-var enemyCount = 7;
+var enemyCount = 10;
 var makeEnemies = function(){
   var enemies = [];
   for( var i = 0; i < enemyCount; i++ ){
-    var x = new Cube(0x50D8F4, 10); //blue
+    var x = new Cube(0x50D8F4, Math.random()*5+10); //blue
     enemies.push(x)
   }
   return enemies;
 }
 var enemies = makeEnemies();
-console.log(enemies)
 
 // setting the floor
 var floor = new THREE.Mesh(new THREE.BoxGeometry(800, 3, 3000), new THREE.MeshLambertMaterial({ color : 0x91FF9E }) );
@@ -117,61 +116,93 @@ floorLight.position.set(0, 500, player.position.z);
 scene.add( floorLight );
 
 // collision logic
-var checkCollision = function(obj) { // returns boolean
+var checkCollision = function(obj, type) { // returns boolean
   var dx = player.position.x - obj.position.x;
   var dy = player.position.y - obj.position.y;
   var distance = Math.sqrt( Math.pow(dx, 2) + Math.pow(dy, 2) );
-  if (distance < 15 && obj.active !== false) { //COLLISION with target
-    obj.active = false;
-    return true;
-  } else {
-    return false
+  //   if (distance < obj.radius && obj.active !== false) { //COLLISION with target
+  //     obj.active = false
+  //     return true;
+  //   } else {
+  //     return false
+  //   }
+  // }
+  if(type === 'enemy'){
+    if (distance < (obj.radius + 12) && obj.active !== false) { //COLLISION with target *** REPLACE 12 WITH player.radius
+      obj.active = false;
+      return true;
+    } else {
+      return false
+    }
+  }
+  if(type === 'target'){
+    if (distance < (obj.radius + 12) && obj.active !== false) { //COLLISION with target
+      obj.active = false;
+      return true;
+    } else {
+      return false
+    }
   }
 }
 
-var collision = function(obj){
-  console.log('collision');
+var targetCollision = function(obj){
   cubes.push( new Cube() );
   scene.remove(obj);
   player.levelUp();
+  if ( (1/3)*Math.pow(player.level+1, 2) > dz ) {
+    dz = Math.max( (1/3)*Math.pow(player.level+1, 2), 2 );
+  }
+  score += player.level*100;
+  enemies.push(Cube(0x50D8F4, Math.random()*5+10))
+  $('#level').html("Level " + player.level);
+
+}
+
+var enemyCollision = function(enemy){
+  score -= 1000;
+  player.levelDown();
+  $('#level').html("Level " + player.level);
 }
 
 // update functions
 var updateTargets = function(){
   for (var s = 0; s < cubes.length; s++) {
     if( cubes[s].position.z > (player.position.z - cubes[s].radius) && cubes[s].position.z < (player.position.z + cubes[s].radius)) {
-      if( checkCollision(cubes[s]) ){
-        collision(cubes[s]);
+      if( checkCollision( cubes[s], 'target') ){
+        targetCollision(cubes[s]);
       }
     }
     if( cubes[s].position.z > player.position.z+(camera.position.z - player.position.z)/4) {
       cubes[s].position.z = -710;
-      cubes[s].position.x = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
-      cubes[s].position.y = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
+      cubes[s].position.x = 0.15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
+      cubes[s].position.y = 0.15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
     }
 
     cubes[s].position.z += Math.random()+2;
   };
 }
+
+var dz = function(){ return Math.max( (1/3)*Math.pow(player.level+1, 2), 2 ); };
+var dz = 2;
 var updateEnemies = function(){
-  for (var e = 0; e < enemyCount; e++){
+  for (var e = 0; e < enemies.length; e++){
     if( enemies[e].position.z > (player.position.z - enemies[e].radius) && enemies[e].position.z < (player.position.z + enemies[e].radius)) {
-      if( checkCollision(enemies[e]) ){
-        player.levelDown();
-        console.log('Level Down!')
+      if( checkCollision(enemies[e], 'enemy') ){
+        enemyCollision( enemies[e] );
       }
     }
     if( enemies[e].position.z > player.position.z+(camera.position.z - player.position.z)/4) {
       enemies[e].position.z = -710;
-      enemies[e].position.x = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
-      enemies[e].position.y = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
+      enemies[e].position.x = 0.2*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
+      enemies[e].position.y = 0.2*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
       enemies[e].active = true;
     }
-    enemies[e].position.z += 3;
-    enemies[e].rotation.y += Math.random()*.02;
-    enemies[e].rotation.x += Math.random()*.02;
+    enemies[e].position.z += dz;
+    enemies[e].rotation.y += Math.random()*0.03*(player.level+1);
+    enemies[e].rotation.x += Math.random()*0.02;
   }
 }
+var score = 0;
 
 // general animation update
 var update = function(){
@@ -179,8 +210,9 @@ var update = function(){
   particleSystem.geometry.__dirtyVertices = true;
   updateTargets();
   updateEnemies();
-
   player.animate();
+  score += player.level;
+  $('#score').html(score);
   renderer.render(scene, camera);
   requestAnimationFrame(update);
 };
