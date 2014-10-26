@@ -149,7 +149,7 @@ var targetCollision = function(obj){
   cubes.push( new Cube() );
   scene.remove(obj);
   player.levelUp();
-  if ( (1/3)*Math.pow(player.level+1, 2) ); > dz ) {
+  if ( (1/3)*Math.pow(player.level+1, 2) > dz ) {
     dz = Math.max( (1/3)*Math.pow(player.level+1, 2), 2 );
   }
   score += player.level*100;
