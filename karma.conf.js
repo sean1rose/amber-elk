@@ -24,7 +24,6 @@ module.exports = function(config) {
       'app/js/models/RingGeometry3D.js',
       'app/js/models/RingArray.js',
       'app/js/models/player.js',
-      'app/js/game.js',
       'tests/**/*.js'
     ],
 
@@ -71,22 +70,22 @@ module.exports = function(config) {
 
 
     // global config for SauceLabs
-    //sauceLabs: {
-      //startConnect: true,
-      //testName: 'Amber Elk unit tests'
-    //},
+    sauceLabs: {
+      startConnect: true,
+      testName: 'Amber Elk unit tests'
+    },
 
     // define SL browsers
-    //customLaunchers: {
-      //sl_chrome_OSX9: {
-        //base: 'SauceLabs',
-        //browserName: 'chrome',
-        //version: '38'
-      //}
-    //},
+    customLaunchers: {
+      sl_chrome: {
+        base: 'SauceLabs',
+        browserName: 'chrome',
+        version: '38'
+      }
+    },
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: process.env.TRAVIS ? [ 'Firefox' ] : [ 'Chrome' ],
+    browsers: process.env.TRAVIS ? [ 'sl_chrome' ] : [ 'Chrome' ],
 
 
     // Continuous Integration mode
