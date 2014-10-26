@@ -68,24 +68,9 @@ module.exports = function(config) {
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: false,
 
-
-    // global config for SauceLabs
-    sauceLabs: {
-      startConnect: true,
-      testName: 'Amber Elk unit tests'
-    },
-
-    // define SL browsers
-    customLaunchers: {
-      sl_chrome: {
-        base: 'SauceLabs',
-        browserName: 'chrome',
-        version: '38'
-      }
-    },
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: process.env.TRAVIS ? [ 'sl_chrome' ] : [ 'Chrome' ],
+    browsers: process.env.TRAVIS ? [ 'Firefox' ] : [ 'Chrome' ],
 
 
     // Continuous Integration mode
