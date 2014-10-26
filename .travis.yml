@@ -1,15 +1,19 @@
 language: node_js
 node_js:
 - '0.10'
+before_install:
+    - "export DISPLAY=:99.0"
+    - "sh -e /etc/init.d/xvfb start"
 install:
 - npm install -g bower
 - npm install
 - bower install
 env:
   global:
-    - secure: "Eq1wk0NedKtABoJsT1plBtgXGU2+At5/dtKzge1GJI1hbJIOhiun17e51bO7xSd49DkOOyyI6aHP+zVC01HctaIuqJ27NrnOdan62XO+cF9JdErZ3vWF2r1mwy88uIhxuKEuYwlI4X4weNEJ5Eln0hmt6uheDpBpuXJ1/Q37deo="
-    - secure: "S0GZ9gr+U85UD3zAdjybXUTGwrlVpEFSrZI1DAzAf5wZG0Z0m8orsA4grYpaKt9p8vUiZxX9+hPUfVYKVvPidFGFs9woIOLeDpyrSueboAfR67M/y9T78nPaQoWxBMNvNKnBo5rvmrGXeLjTp8mXEt2x+wEhMr5nc9e+XVSAO8U="
+    - secure: Eq1wk0NedKtABoJsT1plBtgXGU2+At5/dtKzge1GJI1hbJIOhiun17e51bO7xSd49DkOOyyI6aHP+zVC01HctaIuqJ27NrnOdan62XO+cF9JdErZ3vWF2r1mwy88uIhxuKEuYwlI4X4weNEJ5Eln0hmt6uheDpBpuXJ1/Q37deo=
+    - secure: S0GZ9gr+U85UD3zAdjybXUTGwrlVpEFSrZI1DAzAf5wZG0Z0m8orsA4grYpaKt9p8vUiZxX9+hPUfVYKVvPidFGFs9woIOLeDpyrSueboAfR67M/y9T78nPaQoWxBMNvNKnBo5rvmrGXeLjTp8mXEt2x+wEhMr5nc9e+XVSAO8U=
 after_success:
-  - mkdir /home/travis/tmp
-  - sudo $(which npm) install -g firebase-tools
-  - if [[ "${TRAVIS_PULL_REQUEST}" == "false" ]]; then echo -e "${FIREBASE_USERNAME}\n${FIREBASE_PASSWORD}" | firebase deploy; fi
+- mkdir /home/travis/tmp
+- sudo $(which npm) install -g firebase-tools
+- if [[ "${TRAVIS_PULL_REQUEST}" == "false" ]]; then echo -e "${FIREBASE_USERNAME}\n${FIREBASE_PASSWORD}"
+  | firebase deploy; fi

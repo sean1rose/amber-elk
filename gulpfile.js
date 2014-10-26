@@ -18,7 +18,8 @@ var paths = {
     'app/js/models/RingGeometry3D.js',
     'app/js/models/RingArray.js',
     'app/js/models/player.js',
-    'app/js/game.js'],
+    'app/js/game.js'
+  ],
   distscripts: ['dist/js/**/*.js'],
   html: ['client/pages/*.html', 'client/*.html'],
   disthtml: ['dist/pages/*.html', 'dist/index.html'],
@@ -31,7 +32,7 @@ var paths = {
 // JS HINT on both client js and server js
 gulp.task('lint', function() {
   // Lint app files
-  gulp.src('app/**/[^OrbitControls]*.js')
+  gulp.src(paths.scripts)
     .pipe(jshint())
     .pipe(jshint.reporter(stylish));
 });

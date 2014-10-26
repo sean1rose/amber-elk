@@ -21,7 +21,9 @@ module.exports = function(config) {
       'client/bower_components/firebase/firebase.js',
       'client/bower_components/three.js/three.min.js',
       'client/bower_components/semantic/build/packaged/javascript/semantic.min.js',
-      'app/**/*.js',
+      'app/js/models/RingGeometry3D.js',
+      'app/js/models/RingArray.js',
+      'app/js/models/player.js',
       'tests/**/*.js'
     ],
 
@@ -66,10 +68,9 @@ module.exports = function(config) {
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: false,
 
-
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'],
+    browsers: process.env.TRAVIS ? [ 'Firefox' ] : [ 'Chrome' ],
 
 
     // Continuous Integration mode
