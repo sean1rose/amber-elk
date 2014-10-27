@@ -6,6 +6,7 @@ var player, cubes, enemies, particles;
 var mouseX, mouseY, speed;
 
 
+
 // maker functions
 
 
@@ -229,6 +230,7 @@ var targetCollision = function(obj){
   player.levelUp();
   speed += 0.001 * player.level;
   player.score += player.level*100;
+
   enemies.push(makeCube(0x50D8F4, Math.random()*5+10));
   $('#level').html("Level " + player.level);
 
@@ -294,6 +296,7 @@ var updateEnemies = function(){
 };
 
 
+
 var updateParticles = function(){
   var particlePoints = particles.geometry.vertices;
   for (var i = 0; i < particlePoints.length; i++){
@@ -309,10 +312,6 @@ var updateParticles = function(){
 };
 
 
-
-var gameOver = function(){
-  window.location = "gameover.html"
-};
 
 /**
 * The update fuction generates a new animation frame.
