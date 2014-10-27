@@ -191,7 +191,7 @@ var enemyCollision = function(enemy){
   score -= 1000;
   player.levelDown();
   player.lives--;
-  $('#lives').html("Lives remaining: "+ player.lives)
+  $('#lives').html("Lives remaining: "+ player.lives);
   $('#level').html("Level " + player.level);
 }
 
