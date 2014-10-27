@@ -66,13 +66,19 @@
         </h2>
         <br>
         <div class="ui horizontal divider"><i class="reorder icon"></i></div>
+        <div id="high-scores">
+          <script>
+            for(var x = 0; x < 5; x++){
+              var html = '<span class="userScore">' + scoreArray[x].score + '</span><span class="userName">' + scoreArray[x].username + '</span><br>';
+              $('#high-scores').append(html);
+            }
+          </script>
+        </div>
 
-        <div>
+<!--         <div>
           <div class="commentbox">
           <p class="firstScore"></p>
-          <p class="playerquotesource">
-            -Hideo Kojima
-          </p>
+          <p class="secondScore"></p>
           <br>
           <p class="playerquote">
             Artwork in its purest form.
@@ -101,7 +107,8 @@
           <p class="playerquotesource">
             -Oprah
           </p>
-        </div>
+        </div> -->
+
       </div>
     </div>
   </div>
