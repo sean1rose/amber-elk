@@ -4,6 +4,24 @@
 
 /**
  * Creates a new 3D ring geometry.
+ *
+ * thetaSegments is the number of segments around the circumference of the ring.
+ * Increase this value to make the ring look like a smoother circle.
+ *
+ * phiSegments is the number of segments from the inner radius to the outer radius.
+ * Increase this value to allow for more detailed mapping on the top and bottom annular surfaces.
+ *
+ * heightSegments is the number of segments from the bottom to the top of the ring.
+ * Increase this value to allow for more detailed mapping of the inner and outer walls.
+ *
+ * thetaStart is the angle in radians at which to begin drawing the ring.
+ * Mainly useful inconjunction with a thetaLength less than 2π.
+ *
+ * thetaLength is the angle in radians the ring should span. If this is 2π or omitted,
+ * you will get a closed ring that describes a complete circle. If less than 2π,
+ * you will get a section of ring that describes the angle provided.
+ *
+ * TODO: Needs UV mapping
  * @param {number} [outerRadius=100] Outer radius; r_outer > 0
  * @param {number} [innerRadius=75] Inner radius r_outer > r_inner > 0;
  * @param {number} [height=10] Ring Height; h > 0
@@ -34,20 +52,6 @@ THREE.RingGeometry3D = function (outerRadius, innerRadius, height, thetaSegments
 
   // p is shorter than this.parameters...
   var p = this.parameters;
-
-  /**
-   * Creates a new vector from provided parameters.
-   * Just a short wrapper for {THREE.Vector3}
-   * @param x
-   * @param y
-   * @param z
-   * @returns {THREE.Vector3}
-   */
-  var Vec = function (x, y, z) {
-    return new THREE.Vector3(x, y, z);
-  };
-
-
 
   var closed = this.isClosed();
   var open = !closed;
@@ -158,7 +162,6 @@ THREE.RingGeometry3D = function (outerRadius, innerRadius, height, thetaSegments
       }
     }
   }
-
   this.computeFaceNormals();
 };
 
@@ -167,6 +170,23 @@ THREE.RingGeometry3D.prototype.constructor = THREE.RingGeometry3D;
 
 // Class Methods //
 
+/**
+ * Helper method for determining whether the geometry is closed,
+ * i.e., whether thetaLength is 2π
+ * @returns {boolean}
+ */
 THREE.RingGeometry3D.prototype.isClosed = function(){
   return this.parameters.thetaLength === 2*Math.PI;
+};
+
+/**
+ * Creates a new vector from provided parameters.
+ * Just a short wrapper for {THREE.Vector3}
+ * @param x
+ * @param y
+ * @param z
+ * @returns {THREE.Vector3}
+ */
+var Vec = function (x, y, z) {
+  return new THREE.Vector3(x, y, z);
 };

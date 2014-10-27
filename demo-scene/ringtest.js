@@ -39,9 +39,15 @@ camera.lookAt(scene.position);
 lights[0].position.set(-100,100,100);
 lights[1].position.set(100,100,100);
 lights[2].position.set(100,-100,100);
-//lights[3].position.set(-100,-100,100);
 controls.addEventListener('change', render);
-scene.add(floor);
+document.body.addEventListener('click', function(e){
+  e.preventDefault();
+  player.levelUp();
+});
+document.body.addEventListener('contextmenu', function(e){
+  e.preventDefault();
+  player.levelDown();
+});
 scene.add(player);
 
 for (i = 0; i < lights.length; i++){

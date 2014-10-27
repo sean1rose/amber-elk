@@ -4,7 +4,17 @@
 
 /**
  * Creates a new RingArray with the specified radius.
- * @param {number} radius
+ *
+ * This is an array that can hold {THREE.Object3D} or {THREE.Mesh} objects.
+ * It will automaticallydistribute those objects evenly around a circle of
+ * the provided radius. It allows manipulation of the objects as a single unit.
+ * The child objects are positioned based on the origin of their respective local
+ * coordinate systems, such that (0,0,0) in the child object's coordinate system
+ * lies on the circle. Therefore, if the child object is centered around (0,0,0)
+ * in its local coordinate system, half of the object will will fall within
+ * the circle and the other half outside the circle.
+ *
+ * @param {number} radius The radius of the circle around which to distribute the objects
  * @constructor
  * @augments THREE.Object3D
  * @classdesc A self-balancing ring-shaped array of THREE.Object3D or THREE.Mesh objects.
@@ -32,7 +42,7 @@ THREE.RingArray.prototype.rebalance = function(){
 
 /**
  * Add an object or objects to the ring array
- * @param {(...THREE.Object3D | ...THREE.Mesh | THREE.Object3D[] | THREE.Mesh[])} obj
+ * @param {(...THREE.Object3D | ...THREE.Mesh | THREE.Object3D[] | THREE.Mesh[])} obj The object to add
  */
 THREE.RingArray.prototype.add = function(obj){
   if (arguments.length > 1) {
@@ -44,7 +54,11 @@ THREE.RingArray.prototype.add = function(obj){
   }
   this.rebalance();
 };
-//
+
+/**
+ * Remove an object from the ring array.
+ * @param {(...THREE.Object3D | ...THREE.Mesh | THREE.Object3D[] | THREE.Mesh[])} obj The object to remove
+ */
 THREE.RingArray.prototype.remove = function(obj){
   if (arguments.length > 1) {
     THREE.Object3D.prototype.remove.apply(this, arguments);
