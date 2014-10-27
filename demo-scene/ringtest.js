@@ -3,7 +3,9 @@ var lights = [];
 var i;
 
 var render = function() {
-  renderer.render(scene, camera);
+  var delta = clock.getDelta();
+  composer.render(delta);
+  //renderer.render(scene, camera);
 };
 
 var animate = function(){
@@ -13,8 +15,25 @@ var animate = function(){
 };
 
 var renderer = new THREE.WebGLRenderer({antialias: true});
+var composer = new THREE.EffectComposer(renderer);
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera (90, window.innerWidth / window.innerHeight, 5, 1300);
+var renderPass = new THREE.RenderPass(scene, camera);
+var renderMask = new THREE.MaskPass(scene, camera);
+var clearMask = new THREE.ClearMaskPass();
+var bloomPass = new THREE.BloomPass(2);
+var effectCopy = new THREE.ShaderPass(THREE.CopyShader);
+var clock = new THREE.Clock();
+
+renderer.gammaInput
+
+effectCopy.renderToScreen = true;
+composer.addPass(renderPass);
+//composer.addPass(renderMask);
+composer.addPass(bloomPass);
+composer.addPass(effectCopy);
+//composer.addPass(clearMask);
+
 var controls = new THREE.OrbitControls(camera);
 var floorGeometry = new THREE.PlaneGeometry(500,500,10,10);
 var floorMaterial = new THREE.MeshPhongMaterial({color: 0xffffff});
