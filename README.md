@@ -32,37 +32,7 @@
 - NPM
 
 ## Development
-
-### Installing Dependencies
-
-From within the root directory:
-
-```sh
-npm install -g bower (or sudo npm install -g bower)
-npm install -g gulp (or sudo npm install -g gulp)
-npm install
-bower install
-```
-
-### Gulp Commands
-#### Starting Development Server
-```sh
-# Run JSHint, Mocha Tests, then start the server
-gulp
-```
-
-#### Generating Documentation
-```sh
-# Generates documentation under "/docs"
-gulp docs
-```
-
-#### Running Tests and Generating Code Coverage
-```sh
-# Runs tests and generates code coverage of those tests in "/coverage"
-gulp test
-```
-You should then see a ```docs/``` folder which contains an easy to use documentation navigation system.
+See the [Developer Guide](DEVELOPER-GUIDE.md)
 
 ### Roadmap
 
