@@ -11,6 +11,7 @@ var concat = require('gulp-concat');
 var cssmin = require('gulp-cssmin');
 var rename  = require('gulp-rename');
 var rimraf = require('gulp-rimraf');
+var sourcemaps = require('gulp-sourcemaps');
 
 // the paths to our files
 var paths = {
@@ -67,9 +68,11 @@ gulp.task('test', ['build'], function(done) {
 // Minify Javascript
 gulp.task('minjs', function() {
   gulp.src(paths.scripts)
+    .pipe(sourcemaps.init() )
     .pipe(concat('main.js'))
     .pipe(rename({suffix: '.min'}))
     .pipe(uglify())
+    .pipe(sourcemaps.write() )
     .pipe(gulp.dest('dist/js'))
 });
 // Minify CSS
