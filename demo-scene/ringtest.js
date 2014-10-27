@@ -4,6 +4,7 @@ var i;
 
 var SCREEN_WIDTH = window.innerWidth;
 var SCREEN_HEIGHT = window.innerHeight;
+var DPR = window.devicePixelRatio || 1;
 
 var render = function() {
   var delta = clock.getDelta();
@@ -20,9 +21,8 @@ var animate = function(){
 };
 
 var renderer = new THREE.WebGLRenderer({
-  antialias: true,
   precision: 'highp',
-  preserveDrawingBuffer: 'true'
+  preserveDrawingBuffer: true
 });
 renderer.gammaInput = true;
 renderer.gammaOutput = true;
@@ -35,17 +35,17 @@ var effectBloom = new THREE.BloomPass(1);
 var effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
 var effectCopy = new THREE.ShaderPass(THREE.CopyShader);
 var composer = new THREE.EffectComposer(renderer);
-effectFXAA.uniforms['resolution'].value = new THREE.Vector2(1/SCREEN_WIDTH, 1/SCREEN_HEIGHT);
+effectFXAA.uniforms['resolution'].value = new THREE.Vector2(1/(SCREEN_WIDTH * DPR), 1/(SCREEN_HEIGHT * DPR));
 effectBloom.renderTargetX.format = THREE.RGBAFormat;
 effectBloom.renderTargetY.format = THREE.RGBAFormat;
 effectCopy.renderToScreen = true;
+composer.setSize(SCREEN_WIDTH * DPR, SCREEN_HEIGHT * DPR);
 composer.addPass(renderModel);
 composer.addPass(effectBloom);
 composer.addPass(effectFXAA);
 composer.addPass(effectCopy);
 
 var clock = new THREE.Clock();
-
 
 var controls = new THREE.OrbitControls(camera);
 var floorGeometry = new THREE.PlaneGeometry(500,500,10,10);
