@@ -2,8 +2,8 @@
 
 ## Table of Contents
 - [Basics](#basics)  
-  -- [Technology](#technology)  
-  -- [File Structure](#file-structure)  
+  - [Technology](#technology)  
+  - [File Structure](#file-structure)  
 - [Getting Started](#getting-started)  
 - [Workflow](#workflow)  
 
@@ -14,11 +14,11 @@ You should read this section before moving onto “Getting Started” or “Work
 ### Technology  
 
 #### Main Components
-- [Three.js](http://threejs.org/) - 3D WebGL Library
-  -- Game Graphics and Logic
+- [Three.js](http://threejs.org/) - 3D WebGL Library  
+  - Game Graphics and Logic
 - [jQuery](http://jquery.com/) - DOM Manipulation
-- [Semantic UI](http://semantic-ui.com/) - UI Library
-  -- Landing page
+- [Semantic UI](http://semantic-ui.com/) - UI Library  
+  - Landing page
 - [Firebase](https://www.firebase.com/) - Hosting and Database
 
 #### Development ONLY
