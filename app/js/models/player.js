@@ -4,10 +4,11 @@
  * @classdesc A wrapper for the various mesh objects that comprise the player
  *     character model and its associated logic. Extends {@link external THREE:Object3D}.
  */
-var PlayerCharacter = function () {
+var PlayerCharacter = function (lives) {
   THREE.Object3D.call(this);
   this.level = 0;
   this.layers = [];
+  this.lives = lives || 5;
   this.baseRing = glowifyMesh(new THREE.Mesh(new THREE.RingGeometry3D(15, 13, 3, 56, 8, 8), randomMaterial('r')));
   this.baseRingSplit = glowifyMesh(new THREE.Mesh(new THREE.RingGeometry3D(15, 13, 3, 36, 2, 3, 0, 16*Math.PI/9), this.baseRing.material));
   this.layers[0] = new THREE.Object3D();
@@ -95,8 +96,12 @@ PlayerCharacter.prototype.levelDown = function(){
     return this.level;
   }
   if (this.level < 0){
-    this.remove(this.layers[0]);
-    alert('Game over');
+    this.lives--;
+    if (this.lives < 0) {
+      window.location = 'gameover.html';
+    } else {
+      this.level = 0;
+    }
   }
 };
 
