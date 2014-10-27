@@ -18,8 +18,6 @@ var PlayerCharacter = function () {
   this.layers[4] = glowifyMesh(new THREE.Mesh(new THREE.RingGeometry3D(35, 33, 5, 62, 2, 3, 0, 8*Math.PI/9), new randomMaterial('r')));
   this.layers[5] = new THREE.RingArray(38);
   this.layers[6] = new THREE.RingArray(45);
-  this.layers[7] = new THREE.RingArray(52);
-  this.layers[7].rotation = 2*Math.PI/13;
   this.add(this.layers[0]);
 };
 
@@ -61,15 +59,6 @@ PlayerCharacter.prototype.levelUp = function(){
     this.layers[6].add(glowifyMesh(new THREE.Mesh(new THREE.BoxGeometry(8,2,4,4,2,3), randomMaterial('b'))));
     return this.level
   }
-  if (this.level === 38){
-    this.add(this.layers[7]);
-    this.layers[7].add(glowifyMesh(new THREE.Mesh(new THREE.BoxGeometry(4,8,2,4,3,2), randomMaterial())));
-    return this.level;
-  }
-  if (this.level < 51){
-    this.layers[7].add(glowifyMesh(new THREE.Mesh(new THREE.BoxGeometry(4,8,2,4,3,2), randomMaterial())));
-    return this.level;
-  }
 };
 /**
  * Decrease level by one. Removes relevant geometry.
@@ -77,15 +66,6 @@ PlayerCharacter.prototype.levelUp = function(){
  */
 PlayerCharacter.prototype.levelDown = function(){
   this.level--;
-  if (this.level > 37){
-    this.layers[7].remove(this.layers[7].children[this.layers[7].children.length - 1]);
-    return this.level;
-  }
-  if (this.level === 37){
-    this.layers[7].remove(this.layers[7].children[this.layers[7].children.length - 1]);
-    this.remove(this.layers[7]);
-    return this.level;
-  }
   if (this.level > 24){
     this.layers[6].remove(this.layers[6].children[this.layers[6].children.length - 1]);
     return this.level;
@@ -132,7 +112,6 @@ PlayerCharacter.prototype.animate = function(){
   this.layers[4].rotation.z -= 0.04;
   this.layers[5].rotation.z += 0.05;
   this.layers[6].rotation.z -= 0.005;
-  this.layers[7].rotation.z -= 0.005;
 };
 
 /**
@@ -141,10 +120,9 @@ PlayerCharacter.prototype.animate = function(){
  * @returns {number} The effective radius of the player model.
  */
 PlayerCharacter.prototype.effectiveRadius = function(){
-  if (this.level < 5) return this.layers[this.level].parameters.outerRadius;
+  if (this.level < 5) return this.layers[this.level].children[0].geometry.parameters.outerRadius;
   if (this.level < 25) return this.layers[5].radius + 1;
   if (this.level < 38) return this.layers[6].radius + 4;
-  if (this.level < 51) return this.layers[7].radius + 4;
 };
 
 /**
