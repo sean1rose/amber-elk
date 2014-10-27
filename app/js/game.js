@@ -1,117 +1,17 @@
-/**
-*Defining mouse controls.
-*The player's position is set by the pointer's position and a scaling coefficient, currently at .25
-*/
-document.onmousemove = function (e) {mousePos(e);};
-var mouseX = 0;
-var mouseY = 0;
-var mousePos = function(e) {
-	mouseX = e.pageX;
-	mouseY = e.pageY;
-	player.position.set((mouseX-window.innerWidth/2)*.25, .25*(-(mouseY-window.innerHeight/2)), player.position.z);
-	return true;
-};
+// global variables
 
-var SCREEN_WIDTH = window.innerWidth;
-var SCREEN_HEIGHT = window.innerHeight;
-var DPR = window.devicePixelRatio || 1;
-
-/*
-Creating the renderer and appending it to the document
-*/
-
-// creating the scene.
-var renderer = new THREE.WebGLRenderer({
-  antialias: true,
-  precision: 'highp',
-  preserveDrawingBuffer: true
-});
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.shadowMapEnabled = true;
-renderer.gammaInput = true;
-renderer.gammaOutput = true;
+var SCREEN_WIDTH, SCREEN_HEIGHT, DPR;
+var renderer, scene, camera, composer, clock;
+var player, cubes, enemies, particles;
+var mouseX, mouseY, speed, score;
 
 
-document.body.appendChild(renderer.domElement);
-var scene = new THREE.Scene();
-
-/*
-Instantiating the player and setting the player in the scene
-*/
-var player = new PlayerCharacter();
-scene.add(player);
-player.lives = 5;
-player.position.set(0,0,500);
-
-/*
-Instantiating the camera
-*/
-var camera = new THREE.PerspectiveCamera (35, window.innerWidth / window.innerHeight, 5, 5000);
-camera.position.set(player.position.x, player.position.y, player.position.z*1.7);
-camera.lookAt(scene.position);
+// maker functions
 
 
-// post-processing
-var renderModel = new THREE.RenderPass(scene, camera);
-var effectBloom = new THREE.BloomPass(1);
-var effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
-var effectCopy = new THREE.ShaderPass(THREE.CopyShader);
-var composer = new THREE.EffectComposer(renderer);
-var clock = new THREE.Clock();
-effectFXAA.uniforms['resolution'].value = new THREE.Vector2(1/(SCREEN_WIDTH * DPR), 1/(SCREEN_HEIGHT * DPR));
-effectBloom.renderTargetX.format = THREE.RGBAFormat;
-effectBloom.renderTargetY.format = THREE.RGBAFormat;
-effectCopy.renderToScreen = true;
-composer.setSize(SCREEN_WIDTH * DPR, SCREEN_HEIGHT * DPR);
-composer.addPass(renderModel);
-composer.addPass(effectBloom);
-composer.addPass(effectFXAA);
-composer.addPass(effectCopy);
-
-// background particle settings
-var particleCount = 300;
-var particles = new THREE.Geometry();
-
-/**
-*makeParticle assigns a particle instance some initial position and vector settings
-*/
-var makeParticle = function(particle){
-  var px = (Math.random() * window.innerWidth) - (window.innerWidth / 2);
-  var py = (Math.random() * window.innerHeight) - (window.innerHeight / 2);
-  var pz = 0;
-  var vx = Math.random();
-  var vy = Math.random();
-  var vz = 4 + Math.random();
-  if (particle){
-    particle.x = px;
-    particle.y = py;
-    particle.z = pz;
-    particle.velocity.x = vx;
-    particle.velocity.y = vy;
-    particle.velocity.z = vz;
-  } else {
-    particle = new THREE.Vector3(px, py, pz);
-  }
-  return particle;
-};
-
-// sets new particles on the particles geometry
-// creates particle system and adds it to scene
-for (var p = 0; p < particleCount; p++){
-  particles.vertices.push(makeParticle());
-}
-var particleMaterial = new THREE.PointCloudMaterial({color: 0xffffff, size: 2, blending: THREE.AdditiveBlending, transparent: true});
-var particleSystem = new THREE.PointCloud(particles, particleMaterial);
-particleSystem.sortParticles = true;
-scene.add(particleSystem);
-
-
-/**
-* Cube is used to instantiate both the enemies and the targets.  Cube accepts a color and edge length. A cube is randomly placed in the xyz coordinate grid.
-*/
-var Cube = function(hexColor, edgeLength) {
-  var x = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
-  var y = .15*((Math.random() * window.innerHeight) - (window.innerHeight / 2));
+var makeCube = function(hexColor, edgeLength) {
+  var x = .15*((Math.random() * SCREEN_WIDTH * DPR) - (SCREEN_WIDTH * DPR / 2));
+  var y = .15*((Math.random() * SCREEN_HEIGHT * DPR) - (SCREEN_HEIGHT * DPR / 2));
   var z = Math.random() * camera.position.z - 1000;
   var e = edgeLength || Math.random()*2 + 1.5;
   var cube = new THREE.Mesh(new THREE.BoxGeometry(e, e, e), new THREE.MeshLambertMaterial({ color : hexColor || 0x2BF149 }) );
@@ -123,55 +23,174 @@ var Cube = function(hexColor, edgeLength) {
   scene.add( cube );
   return cube;
 };
-/**
-* makeCubes creates the cubes array and populates it with our 'target' cubes.
-*/
-var cubeCount = 15;
-var makeCubes = function(){
+
+var makeCubes = function(cubeCount){
   var cubes = [];
-	for (var i = 0; i<cubeCount; i++){
-  	cubes.push(new Cube(0x2BF149)); // green
-	}
+  cubeCount = cubeCount || 15;
+  for (var i = 0; i<cubeCount; i++){
+    cubes.push(makeCube(0x2BF149)); // green
+  }
   return cubes
 };
-var cubes = makeCubes();
 
-/**
-* makeEnemies creates the enemies array and populates it with our 'enemy' cubes.
-*/
-var enemyCount = 10;
-var makeEnemies = function(){
+var makeEnemies = function(enemyCount){
   var enemies = [];
+  enemyCount = enemyCount || 10;
   for( var i = 0; i < enemyCount; i++ ){
-    var x = new Cube(0x50D8F4, Math.random()*5+10); //blue
+    var x = makeCube(0x50D8F4, Math.random()*5+10); //blue
     enemies.push(x)
   }
   return enemies;
 };
-var enemies = makeEnemies();
+
+var makeParticle = function(particle){
+  var px = (Math.random() * SCREEN_WIDTH * DPR) - (SCREEN_WIDTH * DPR / 2);
+  var py = (Math.random() * SCREEN_HEIGHT * DPR) - (SCREEN_HEIGHT * DPR / 2);
+  var pz = Math.random() * player.position.z * 1.7;
+  var vx = Math.random();
+  var vy = Math.random();
+  if (particle){
+    particle.x = px;
+    particle.y = py;
+    particle.z = 0;
+    particle.velocity.x = vx;
+    particle.velocity.y = vy;
+    particle.velocity.z = speed;
+  } else {
+    particle = new THREE.Vector3(px, py, pz);
+    particle.velocity = new THREE.Vector3(vx, vy, speed);
+  }
+  return particle;
+};
+
+
+// initialization functions
+
+var initializeRenderer = function(){
+  renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    precision: 'highp',
+    preserveDrawingBuffer: true
+  });
+  renderer.setSize(SCREEN_WIDTH * DPR, SCREEN_HEIGHT * DPR);
+  renderer.shadowMapEnabled = true;
+  renderer.gammaInput = true;
+  renderer.gammaOutput = true;
+  document.body.appendChild(renderer.domElement);
+};
+
+var initializeParticles = function(particleCount){
+  var particleVertices = new THREE.Geometry();
+  for (var p = 0; p < particleCount; p++){
+    particleVertices.vertices.push(makeParticle());
+  }
+  var particleMaterial = new THREE.PointCloudMaterial({color: 0xffffff, size: 2, blending: THREE.AdditiveBlending, transparent: true});
+  particles = new THREE.PointCloud(particleVertices, particleMaterial);
+  particles.sortParticles = true;
+  scene.add(particles);
+};
+
+var initializePlayer = function(){
+  player = new PlayerCharacter();
+  player.lives = 5;
+  player.position.set(0,0,500);
+  scene.add(player);
+};
+
+var initializeTargets = function(){
+  cubes = makeCubes(15);
+};
+
+var initializeEnemies = function(){
+  enemies = makeEnemies(10);
+};
+
+var initializeLights = function(){
+  scene.add(new THREE.HemisphereLight(0xEC752A, 0x505AF4, 0.9));
+  var floorLight = new THREE.SpotLight(0xF4F6B1); // bright yellow/white
+  floorLight.castShadow = true;
+  floorLight.shadowDarkness = 0.5;
+  floorLight.shadowMapWidth = 1024;
+  floorLight.shadowMapHeight = 1024;
+  floorLight.shadowCameraNear = 1;
+  floorLight.shadowCameraFar = 1000;
+  floorLight.target = player;
+  floorLight.position.set(0, 500, player.position.z);
+  scene.add( floorLight );
+};
+
+var initializeScene = function(){
+  scene = new THREE.Scene();
+  speed = 2;
+};
+
+var initializeCamera = function(){
+  camera = new THREE.PerspectiveCamera (35, (SCREEN_WIDTH * DPR) / (SCREEN_HEIGHT * DPR), 5, 5000);
+  camera.position.set(player.position.x, player.position.y, player.position.z*1.7);
+  camera.lookAt(scene.position);
+};
+
+var initializePostProcessing = function(){
+  var renderModel = new THREE.RenderPass(scene, camera);
+  var effectBloom = new THREE.BloomPass(1);
+  var effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
+  var effectCopy = new THREE.ShaderPass(THREE.CopyShader);
+  composer = new THREE.EffectComposer(renderer);
+  clock = new THREE.Clock();
+  effectFXAA.uniforms['resolution'].value = new THREE.Vector2(1/(SCREEN_WIDTH * DPR), 1/(SCREEN_HEIGHT * DPR));
+  effectBloom.renderTargetX.format = THREE.RGBAFormat;
+  effectBloom.renderTargetY.format = THREE.RGBAFormat;
+  effectCopy.renderToScreen = true;
+  composer.setSize(SCREEN_WIDTH * DPR, SCREEN_HEIGHT * DPR);
+  composer.addPass(renderModel);
+  composer.addPass(effectBloom);
+  composer.addPass(effectFXAA);
+  composer.addPass(effectCopy);
+};
+
+var initializeControls = function(){
+  document.onmousemove = function (e) {
+    mouseX = e.pageX;
+    mouseY = e.pageY;
+    player.position.set((mouseX - (SCREEN_WIDTH * DPR / 2)) * 0.25, (-(mouseY - (SCREEN_HEIGHT * DPR / 2))) * 0.25, player.position.z);
+    return true;
+  };
+
+  document.onresize = function(e){
+    SCREEN_WIDTH = window.innerWidth;
+    SCREEN_HEIGHT = window.innerHeight;
+    DPR = window.devicePixelRatio || 1;
+    camera.aspect = (SCREEN_WIDTH * DPR) / (SCREEN_HEIGHT * DPR);
+    camera.updateProjectionMatrix();
+    renderer.setSize(SCREEN_WIDTH * DPR, SCREEN_HEIGHT * DPR);
+  };
+};
+
+var init = function(){
+  SCREEN_WIDTH = window.innerWidth;
+  SCREEN_HEIGHT = window.innerHeight;
+  DPR = window.devicePixelRatio || 1;
+  initializeRenderer();
+  initializeScene();
+  initializePlayer();
+  initializeCamera();
+  initializeTargets();
+  initializeEnemies();
+  initializeParticles(300);
+  initializeLights();
+  initializePostProcessing();
+  initializeControls();
+};
+
 
 // setting the floor
-var floor = new THREE.Mesh(new THREE.BoxGeometry(800, 3, 3000), new THREE.MeshLambertMaterial({ color : 0x91FF9E }) );
-floor.position.set(0, -150, -500);
-floor.receiveShadow = true;
-scene.add( floor );
+//var floor = new THREE.Mesh(new THREE.BoxGeometry(800, 3, 3000), new THREE.MeshLambertMaterial({ color : 0x91FF9E }) );
+//floor.position.set(0, -150, -500);
+//floor.receiveShadow = true;
+//scene.add( floor );
+//
 
-//lighting
-var light = new THREE.HemisphereLight(0xEC752A, 0x505AF4, 0.9);
-scene.add(light);
-
-var floorLight = new THREE.SpotLight(0xF4F6B1); // bright yellow/white
-floorLight.castShadow = true;
-floorLight.shadowDarkness = 0.5;
-floorLight.shadowMapWidth = 1024;
-floorLight.shadowMapHeight = 1024;
-floorLight.shadowCameraNear = 1;
-floorLight.shadowCameraFar = 1000;
-floorLight.target = player;
-floorLight.position.set(0, 500, player.position.z);
-scene.add( floorLight );
-
-
+// game logic
 
 /**
 * checkCollision accepts a target or enemy object and a string telling it 'enemy' or 'target'
@@ -205,14 +224,12 @@ var checkCollision = function(obj, type) { // returns boolean
 * The enemy's z speed is increased, and another enemy is added to the scene
 */
 var targetCollision = function(obj){
-  cubes.push( new Cube() );
+  cubes.push(makeCube() );
   scene.remove(obj);
   player.levelUp();
-  if ( (1/3)*Math.pow(player.level+1, 2) > dz ) {
-    dz = Math.max( (1/3)*Math.pow(player.level+1, 2), 2 );
-  }
+  speed += 0.001 * player.level;
   score += player.level*100;
-  enemies.push(Cube(0x50D8F4, Math.random()*5+10));
+  enemies.push(makeCube(0x50D8F4, Math.random()*5+10));
   $('#level').html("Level " + player.level);
 
 };
@@ -223,7 +240,7 @@ var targetCollision = function(obj){
 var enemyCollision = function(enemy){
   score -= 1000;
   player.levelDown();
-  player.lives--;
+  speed -= 0.001 * player.level;
   $('#lives').html("Lives remaining: "+ player.lives);
   $('#level').html("Level " + player.level);
 };
@@ -246,12 +263,10 @@ var updateTargets = function(){
       cubes[s].position.x = 0.15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
       cubes[s].position.y = 0.15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
     }
-
     cubes[s].position.z += Math.random()+2;
   }
 };
 
-var dz = 2;
 
 /**
 * updateTargets is run for every frame.
@@ -272,12 +287,28 @@ var updateEnemies = function(){
       enemies[e].position.y = 0.2*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
       enemies[e].active = true;
     }
-    enemies[e].position.z += dz;
+    enemies[e].position.z += speed;
     enemies[e].rotation.y += Math.random()*0.03*(player.level+1);
     enemies[e].rotation.x += Math.random()*0.02;
   }
 };
-var score = 0;
+
+
+var updateParticles = function(){
+  var particlePoints = particles.geometry.vertices;
+  for (var i = 0; i < particlePoints.length; i++){
+    var particle = particlePoints[i];
+    particle.velocity.z = speed;
+    particle.add(particle.velocity);
+    if (particle.z > camera.position.z){
+      makeParticle(particle);
+    }
+  }
+  particles.rotation.z += 0.001;
+  particles.geometry.__dirtyVertices = true;
+};
+
+
 
 /**
 * The update fuction generates a new animation frame.
@@ -287,15 +318,14 @@ var score = 0;
 * score is updated
 */
 var update = function(){
-  particleSystem.rotation.z += 0.001;
-  particleSystem.geometry.__dirtyVertices = true;
+  updateParticles();
   updateTargets();
   updateEnemies();
   player.animate();
   score += player.level;
   $('#score').html(score);
   render();
-  requestAnimationFrame(update);
+  window.requestAnimationFrame(update);
 };
 
 var render = function(){
@@ -304,4 +334,5 @@ var render = function(){
   composer.render(delta);
 };
 
+init();
 update();
