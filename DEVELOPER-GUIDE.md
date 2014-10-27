@@ -142,3 +142,4 @@ The following are the exact name of the task. You can run the tasks with ```gulp
 
 ## Workflow
 You should know how to handle Git which is covered in the [contributing guidelines](CONTRIBUTING.md).
+![Workflow Diagram](workflow.jpg “Developer Workflow”)
