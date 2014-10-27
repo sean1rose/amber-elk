@@ -138,3 +138,7 @@ The following are the exact name of the task. You can run the tasks with ```gulp
     This will use JSDOC and compile comments created in the application code (the ```app/``` folder) and that will generate HTML pages in the ```docs/``` folder that you can view and get an understanding of what the application code is doing.
   ##### default
     This is the default task that is run when you just run ```gulp``` and it will run [lint](#lint) -> [build](#build) -> [test](#test) -> [start](#start). 
+
+
+## Workflow
+You should know how to handle Git which is covered in the [contributing guidelines](CONTRIBUTING.md).
