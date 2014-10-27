@@ -167,7 +167,7 @@ var checkCollision = function(obj, type) { // returns boolean
 
 /**
 * Colliding with a target levels up the player. The cube is removed from the scene, and a new one is added by instantiating a Cube and pushing it to the cubes array
-* The enemeies z speed is increased, and another enemy is added to the scene
+* The enemy's z speed is increased, and another enemy is added to the scene
 */
 var targetCollision = function(obj){
   cubes.push( new Cube() );
