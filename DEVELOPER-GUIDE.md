@@ -5,6 +5,8 @@
   - [Technology](#technology)  
   - [File Structure](#file-structure)  
 - [Getting Started](#getting-started)  
+  - [Installation](#installation)  
+  - [Gulp](#gulp)  
 - [Workflow](#workflow)  
 
 ## Basics
@@ -26,7 +28,7 @@ You should read this section before moving onto “Getting Started” or “Work
 - [Express](http://expressjs.com/) & [Node JS](http://nodejs.org/) Development Server
 - [Gulp](http://gulpjs.com/) - Build System
 - [Karma](http://karma-runner.github.io/) - Test Runner
-- [Mocha](http://mochajs.org/) - Testing Library
+- [Mocha](http://mochajs.org/) - Test Framework
 - [Sinon / Chai](https://github.com/domenic/sinon-chai) - Testing Library
 - [JSHINT](http://www.jshint.com/) - Code Linting
 - [JSDOC](http://usejsdoc.org/) - Documentation Generation
@@ -68,3 +70,70 @@ test/ (Test Files)
   ├── e2e/ (End to End Testing Files)
   ├── unit/ (Unit Tests)
 ```
+
+## Getting Started
+
+### Installation
+First, install NodeJS from their [website](https://nodejs.org/) or with [NVM](https://github.com/creationix/nvm)
+Then, go to the root directory of this project and run the following:
+```sh
+# Install Bower
+npm install -g bower
+# Install Gulp
+npm install -g gulp
+# Install Node / Gulp Dependencies
+npm install
+# Install Frontend Dependencies
+bower install
+```
+
+### Gulp
+Gulp is a build tool that we are using to run commonly used commands and it helps speed up the development process.
+
+#### Gulp Tasks
+The following are the exact name of the task. You can run the tasks with ```gulp task-name```  
+- [lint](#lint)
+- [start](#start)
+- [serve](#serve)
+- [test](#test)
+- [minjs](#minjs)
+- [mincss](#mincss)
+- [bowerbuildjs](#bowerbuildjs)
+- [bowerbuildcss](#bowerbuildcss)
+- [copystatic](#copystatic)
+- [cleanup](#cleanup)
+- [reloadpage](#reloadpage)
+- [build](#build)
+- [deploy](#deploy)
+- [docs](#docs)
+- [default](#default)
+
+##### lint
+
+##### start
+
+##### serve
+
+##### test
+
+##### minjs
+
+##### mincss
+
+##### bowerbuildjs
+
+##### bowerbuildcss
+
+##### copystatic
+
+##### cleanup
+
+##### reloadpage
+
+##### build
+
+##### deploy
+
+##### docs
+
+##### default
