@@ -16,6 +16,14 @@ var sourcemaps = require('gulp-sourcemaps');
 // the paths to our files
 var paths = {
   scripts: [
+    'app/js/shaders/ConvolutionShader.js',
+    'app/js/shaders/CopyShader.js',
+    'app/js/shaders/FXAAShader.js',
+    'app/js/postprocessing/EffectComposer.js',
+    'app/js/postprocessing/BloomPass.js',
+    'app/js/postprocessing/RenderPass.js',
+    'app/js/postprocessing/ShaderPass.js',
+    'app/js/postprocessing/MaskPass.js',
     'app/js/glow/threex.dilategeometry.js',
     'app/js/glow/threex.atmospherematerial.js',
     'app/js/glow/threex.geometricglowmesh.js',
@@ -88,7 +96,7 @@ gulp.task('bowerbuildjs', function() {
   gulp.src([
       'client/bower_components/jquery/dist/jquery.min.js',
       'client/bower_components/firebase/firebase.js',
-      'client/bower_components/three.js/three.min.js',
+      'client/bower_components/threejs/build/three.min.js',
       'client/bower_components/semantic/build/packaged/javascript/semantic.min.js'
     ])
     .pipe(uglify({ mangle: false, compress: false }))
