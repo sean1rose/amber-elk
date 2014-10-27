@@ -6,9 +6,9 @@ document.onmousemove = function (e) {mousePos(e);};
 var mouseX = 0;
 var mouseY = 0;
 function mousePos (e) {
-	mouseX = e.pageX; 
+	mouseX = e.pageX;
 	mouseY = e.pageY;
-	player.position.set((mouseX-window.innerWidth/2)*.25, .25*(-(mouseY-window.innerHeight/2)), player.position.z)
+	player.position.set((mouseX-window.innerWidth/2)*.25, .25*(-(mouseY-window.innerHeight/2)), player.position.z);
 	return true;
 };
 
@@ -16,6 +16,7 @@ function mousePos (e) {
 Creating the renderer and appending it to the document
 */
 
+// creating the scene.
 var renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMapEnabled = true;
@@ -80,7 +81,7 @@ scene.add(particleSystem);
 var Cube = function(hexColor, edgeLength) {
   var x = .15*((Math.random() * window.innerWidth) - (window.innerWidth / 2));
   var y = .15*((Math.random() * window.innerHeight) - (window.innerHeight / 2));
-  var z = Math.random() * camera.position.z - 1000;  
+  var z = Math.random() * camera.position.z - 1000;
   var e = edgeLength || Math.random()*2 + 1.5;
   cube = new THREE.Mesh(new THREE.BoxGeometry(e, e, e), new THREE.MeshLambertMaterial({ color : hexColor || 0x2BF149 }) );
   cube.radius = e;

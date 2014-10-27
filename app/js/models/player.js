@@ -120,7 +120,11 @@ PlayerCharacter.prototype.animate = function(){
  * @returns {number} The effective radius of the player model.
  */
 PlayerCharacter.prototype.effectiveRadius = function(){
-  if (this.level < 5) return this.layers[this.level].children[0].geometry.parameters.outerRadius;
+  if (this.level === 0) return 15;
+  if (this.level === 1) return 20;
+  if (this.level === 2) return 25;
+  if (this.level === 3) return 30;
+  if (this.level === 4) return 35;
   if (this.level < 25) return this.layers[5].radius + 1;
   if (this.level < 38) return this.layers[6].radius + 4;
 };
