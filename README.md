@@ -2,7 +2,8 @@
 [![Build Status](https://travis-ci.org/Amber-Elk/amber-elk.svg?branch=master)](https://travis-ci.org/Amber-Elk/amber-elk)
 # Amber-Elk: Into the Deep
 
-> A 3D Game
+> Into the Deep is a fast-paced, action-packed dive into depths of the ocean. Players pick off oncoming targets while dodging enemies at break neck speed. And as they progress, players becomes more animated with intricate layers of rings growing and shrinking as they gain or lose momentum.
+
 
 ## Team
 
