@@ -109,31 +109,32 @@ The following are the exact name of the task. You can run the tasks with ```gulp
   - [default](#default)
 
   ##### lint
-
+    The lint command runs JS HINT on all of the application code to see if they are compliant with the JS Hint specifications. This is done to make sure that your code is clean and to their standards.
   ##### start
-
+    This will run the [serve](#serve) command and then start up a browser-sync session so that when you make any changes, the page will reload. You should use the [default](#default) command instead of this though.
   ##### serve
-
-##### test
-
-##### minjs
-
-##### mincss
-
-##### bowerbuildjs
-
-##### bowerbuildcss
-
-##### copystatic
-
-##### cleanup
-
-##### reloadpage
-
-##### build
-
-##### deploy
-
-##### docs
-
-##### default
+    This will start up the Express server to serve up your files. You should use the [default](#default) command instead of this though.
+  ##### test
+    This will run Karma which will then run the Mocha tests located in the ```tests/``` directory and it uses the ```karma.conf.js``` file for its configuration.
+  ##### minjs
+    This will minify all of the application javascript code located in the ```app/``` directory and concatenate them into a single file which is then located at ```dist/js/main.min.js```.
+  ##### mincss
+    This will minify all of the CSS files located in the ```client/styles/``` directory and concatenate them into a single file which is then located at ```dist/css/main.min.css```.
+  ##### bowerbuildjs
+    This will minify specified javascript files from bower components and concatenate them into a single file which is then located at ```dist/js/vendor.min.js```.
+  ##### bowerbuildcss
+    This will minify specified CSS files from bower componenets and concatenate them into a isngle file which is then located at ```dist/css/vendor.min.css```
+  ##### copystatic
+    This command is used to copy over all of the static files (HTML, Images, Fonts, etc.) from the ```client/``` directory to the ```dist/``` directory. 
+  ##### cleanup
+    This will delete the ```dist/``` directory to get you a clean slate.
+  ##### reloadpage
+    This will reload the page when you have your browser sync session running after the [start](#start) command is executed.
+  ##### build
+    This will create the ```dist/``` directory which are the build-ready files. So, it will run [copystatic](#copystatic), [bowerbuildjs](#bowerbuildjs), [bowerbuildcss](#bowerbuildcss), [minjs](#minjs), & [mincss](#mincss).
+  ##### deploy
+    This command is used for Travis as it will run [lint](#lint) -> [build](#build) -> [test](#test)
+  ##### docs
+    This will use JSDOC and compile comments created in the application code (the ```app/``` folder) and that will generate HTML pages in the ```docs/``` folder that you can view and get an understanding of what the application code is doing.
+  ##### default
+    This is the default task that is run when you just run ```gulp``` and it will run [lint](#lint) -> [build](#build) -> [test](#test) -> [start](#start). 
