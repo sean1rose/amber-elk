@@ -15,6 +15,9 @@ var rimraf = require('gulp-rimraf');
 // the paths to our files
 var paths = {
   scripts: [
+    'app/js/glow/threex.dilategeometry.js',
+    'app/js/glow/threex.atmospherematerial.js',
+    'app/js/glow/threex.geometricglowmesh.js',
     'app/js/models/RingGeometry3D.js',
     'app/js/models/RingArray.js',
     'app/js/models/player.js',
