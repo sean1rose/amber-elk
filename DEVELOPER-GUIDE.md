@@ -74,7 +74,7 @@ test/ (Test Files)
 ## Getting Started
 
 ### Installation
-First, install NodeJS from their [website](https://nodejs.org/) or with [NVM](https://github.com/creationix/nvm)
+First, install NodeJS from their [website](https://nodejs.org/) or with [NVM](https://github.com/creationix/nvm)  
 Then, go to the root directory of this project and run the following:
 ```sh
 # Install Bower
@@ -92,27 +92,27 @@ Gulp is a build tool that we are using to run commonly used commands and it help
 
 #### Gulp Tasks
 The following are the exact name of the task. You can run the tasks with ```gulp task-name```  
-- [lint](#lint)
-- [start](#start)
-- [serve](#serve)
-- [test](#test)
-- [minjs](#minjs)
-- [mincss](#mincss)
-- [bowerbuildjs](#bowerbuildjs)
-- [bowerbuildcss](#bowerbuildcss)
-- [copystatic](#copystatic)
-- [cleanup](#cleanup)
-- [reloadpage](#reloadpage)
-- [build](#build)
-- [deploy](#deploy)
-- [docs](#docs)
-- [default](#default)
+  - [lint](#lint)
+  - [start](#start)
+  - [serve](#serve)
+  - [test](#test)
+  - [minjs](#minjs)
+  - [mincss](#mincss)
+  - [bowerbuildjs](#bowerbuildjs)
+  - [bowerbuildcss](#bowerbuildcss)
+  - [copystatic](#copystatic)
+  - [cleanup](#cleanup)
+  - [reloadpage](#reloadpage)
+  - [build](#build)
+  - [deploy](#deploy)
+  - [docs](#docs)
+  - [default](#default)
 
-##### lint
+  ##### lint
 
-##### start
+  ##### start
 
-##### serve
+  ##### serve
 
 ##### test
 
