@@ -28,6 +28,7 @@ Instantiating the player and setting the player in the scene
 */
 var player = new PlayerCharacter();
 scene.add(player);
+player.lives = 5;
 player.position.set(0,0,500);
 
 /*
@@ -189,6 +190,8 @@ var targetCollision = function(obj){
 var enemyCollision = function(enemy){
   score -= 1000;
   player.levelDown();
+  player.lives--;
+  $('#lives').html("Lives remaining: "+ player.lives)
   $('#level').html("Level " + player.level);
 }
 
