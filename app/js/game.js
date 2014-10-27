@@ -148,7 +148,7 @@ var checkCollision = function(obj, type) { // returns boolean
   var dy = player.position.y - obj.position.y;
   var distance = Math.sqrt( Math.pow(dx, 2) + Math.pow(dy, 2) );
   if(type === 'enemy'){
-    if (distance < (obj.radius + 25 ) && obj.active !== false) { //COLLISION with target *** REPLACE 12 WITH player.radius
+    if (distance < (obj.radius + player.effectiveRadius() ) && obj.active !== false) { //COLLISION with target *** REPLACE 12 WITH player.radius
       obj.active = false;
       return true;
     } else {
