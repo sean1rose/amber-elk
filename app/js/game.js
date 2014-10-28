@@ -3,7 +3,7 @@
 var SCREEN_WIDTH, SCREEN_HEIGHT, DPR;
 var renderer, scene, camera, composer, clock;
 var player, cubes, enemies, particles;
-var mouseX, mouseY, speed, score;
+var mouseX, mouseY, speed;
 
 
 // maker functions
@@ -228,7 +228,7 @@ var targetCollision = function(obj){
   scene.remove(obj);
   player.levelUp();
   speed += 0.001 * player.level;
-  score += player.level*100;
+  player.score += player.level*100;
   enemies.push(makeCube(0x50D8F4, Math.random()*5+10));
   $('#level').html("Level " + player.level);
 
@@ -238,7 +238,7 @@ var targetCollision = function(obj){
 * When a collision occurs with an enemy, the player levels down and loses 1000 points
 */
 var enemyCollision = function(enemy){
-  score -= 1000;
+  player.score -= 1000;
   player.levelDown();
   speed -= 0.001 * player.level;
   $('#lives').html("Lives remaining: "+ player.lives);
@@ -310,6 +310,10 @@ var updateParticles = function(){
 
 
 
+var gameOver = function(){
+  window.location = "gameover.html"
+};
+
 /**
 * The update fuction generates a new animation frame.
 * The background particle system is slowly rotated
@@ -322,8 +326,8 @@ var update = function(){
   updateTargets();
   updateEnemies();
   player.animate();
-  score += player.level;
-  $('#score').html(score);
+  player.score += player.level;
+  $('#score').html(player.score);
   render();
   window.requestAnimationFrame(update);
 };

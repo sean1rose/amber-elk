@@ -7,6 +7,7 @@
 var PlayerCharacter = function (lives) {
   THREE.Object3D.call(this);
   this.level = 0;
+  this.score = 0;
   this.layers = [];
   this.lives = lives || 5;
   this.baseRing = glowifyMesh(new THREE.Mesh(new THREE.RingGeometry3D(15, 13, 3, 56, 8, 8), randomMaterial('r')));
@@ -98,6 +99,7 @@ PlayerCharacter.prototype.levelDown = function(){
   if (this.level < 0){
     this.lives--;
     if (this.lives < 0) {
+      localStorage.setItem('playerScore', JSON.stringify(this.score));
       window.location = 'gameover.html';
     } else {
       this.level = 0;
