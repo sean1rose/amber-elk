@@ -66,13 +66,7 @@
         </h2>
         <br>
         <div class="ui horizontal divider"><i class="reorder icon"></i></div>
-        <div id="high-scores">
-          <script>
-            for(var x = 0; x < 5; x++){
-              var html = '<span class="userScore">' + scoreArray[x].score + '</span><span class="userName">' + scoreArray[x].username + '</span><br>';
-              $('#high-scores').append(html);
-            }
-          </script>
+        <div id="high-scores" class="ui grid">
         </div>
 
 <!--         <div>

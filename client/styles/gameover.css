@@ -138,20 +138,22 @@ p a {
   padding-bottom: 50px;
 }
 
-.playerquote {
+.userScore {
+  font-family: "Andale Mono", AndaleMono, monospace;
   color: #AEE9EF;
-  font-size: 14pt;
+  font-size: 30px;
   text-align: left;
-  margin-top: 50px;
-  margin-bottom: 10px;
+  margin-bottom: 50px;
+  padding-left: 35px;
 }
 
-.playerquotesource {
+.userName {
+  font-family: "Andale Mono", AndaleMono, monospace;
   color: white;
-  font-size: 12pt;
+  font-size: 30px;
   text-align: right;
-  margin-top: 10px;
   margin-bottom: 50px;
+  padding-left: 35px;
 }
 
 p {

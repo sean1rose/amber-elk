@@ -46,6 +46,7 @@ $(document).ready(function(){
   var storageArrayNames = [];
   var i;
 
+  //save
   $('#name-score').keypress(function(e){
     var savedName = $('#name-score').val();
     if (e.keyCode == 13){
@@ -54,41 +55,52 @@ $(document).ready(function(){
       saveScore(savedName);
     $('#name-score').hide();
     $('#name-final').html(savedName);
+    firebaseRetrieve();
     }
   });
 
 
 
+  // retrieve
+  var firebaseRetrieve = function(){
+    new Firebase('https://amber-elk-game.firebaseio.com/scores/').once('value', function(snap){
+      var allScores = snap.val();
 
-  new Firebase('https://amber-elk-game.firebaseio.com/scores/').once('value', function(snap){
-    var allScores = snap.val();
+      console.log("this is all users", allScores);
+      
+      var scoreArray = [];
 
-    console.log("this is all users", allScores);
-    
-    var scoreArray = [];
-
-    for (i in allScores){
-      scoreArray.push(allScores[i]);
-    }
-
-    scoreArray.sort(function(a, b){
-      if (b.score > a.score){
-        return 1;
+      for (i in allScores){
+        scoreArray.push(allScores[i]);
       }
-      if (b.score < a.score){
-        return -1;
-      }
-      return 0;
-    })
 
-    console.log("scoreArray", scoreArray);
-    //$('#finalScore').html("High Score: " + lastUser.playerName + ' ' + lastUser.highScore);
-    // for (i in allUsers){
-    //   storageArrayScores.push(allUsers[i].highScore);          
-    //   storageArrayNames.push(allUsers[i].playerName);
-    // }
-    // console.log("here are the names and scoress: ", storageArrayScores);
-  });
+      scoreArray.sort(function(a, b){
+        if (b.score > a.score){
+          return 1;
+        }
+        if (b.score < a.score){
+          return -1;
+        }
+        return 0;
+      })
+
+      $('#high-scores').html('');
+      for(var x = 0; x < 5; x++){
+        var scorehtml = '<div class="center aligned two column row"><span class="userScore column">' + scoreArray[x].score + '</span><span class="userName column">' + scoreArray[x].username + '</span></div>';
+        $('#high-scores').append(scorehtml);
+      }
+      //$('#finalScore').html("High Score: " + lastUser.playerName + ' ' + lastUser.highScore);
+      // for (i in allUsers){
+      //   storageArrayScores.push(allUsers[i].highScore);          
+      //   storageArrayNames.push(allUsers[i].playerName);
+      // }
+      // console.log("here are the names and scoress: ", storageArrayScores);
+    });
+  }
+  firebaseRetrieve();
+
+
+
 
 
 

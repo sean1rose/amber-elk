@@ -68,6 +68,11 @@ PlayerCharacter.prototype.levelUp = function(){
  */
 PlayerCharacter.prototype.levelDown = function(){
   this.level--;
+  this.lives--;
+  if (this.lives < 0) {
+    localStorage.setItem('playerScore', JSON.stringify(this.score));
+    window.location = 'gameover.html';
+  }
   if (this.level > 24){
     this.layers[6].remove(this.layers[6].children[this.layers[6].children.length - 1]);
     return this.level;
@@ -97,13 +102,7 @@ PlayerCharacter.prototype.levelDown = function(){
     return this.level;
   }
   if (this.level < 0){
-    this.lives--;
-    if (this.lives < 0) {
-      localStorage.setItem('playerScore', JSON.stringify(this.score));
-      window.location = 'gameover.html';
-    } else {
-      this.level = 0;
-    }
+    this.level = 0;
   }
 };
 
